@@ -1,6 +1,3 @@
-// libCIPSI1.c 
-// Hubert Konik - filière IPSI
-
 #pragma once
 #include <stdlib.h>
 #include <stdio.h>
