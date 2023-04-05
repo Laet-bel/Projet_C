@@ -22,9 +22,9 @@ int main(void)
 
 	sauvegardeImage(WTH, "P5", "In_30_WTH_OTSU_erode.pgm");*/
 
-	int rayon = 20;
-	int hauteur = 8;
-	int largeur = 50;
+	int rayon = 3;
+	int hauteur = 3;
+	int largeur = 3;
 	ELEMENT_STRUCTURANT ElementStructurant_disk = allocation_ElementStructurant('disk', rayon, rayon);
 
 	for (int i = 0; i < 2 * rayon + 1; i++)

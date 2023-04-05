@@ -1576,8 +1576,35 @@ IMAGE dilatationImage(IMAGE image, int voisinage)
 	return imageDilate;
 }
 
-IMAGE erosionImageavecSE(IMAGE image,const ELEMENT_STRUCTURANT se) {
+IMAGE erosionImageavecSE(IMAGE image,const ELEMENT_STRUCTURANT SE) {
+
+	IMAGE image_erodee = allocationImage(image.Nblig, image.Nbcol);
+
+	for (int i = 0; i < image.Nblig; i++)
+	{
+		for (int j = 0; j < image.Nbcol; j++)
+		{
+			SE.pixel[i][j] = minSE(image, SE, &i, &j);
+		}
+	}
 	return image;
+}
+
+int min_SE(IMAGE img, IMAGE SE, int coo_i, int coo_j)
+{
+	int value = 255;
+
+	for (int y = -SE.Nblig / 2.0; y < SE.Nblig / 2.0; y++)
+	{
+		for (int x = -SE.Nbcol / 2.0; x < SE.Nbcol / 2.0; x++)
+		{
+			if ((coo_i - y >= 0) || (coo_j - x >= 0))
+			{
+				value = min(value, img.pixel[coo_i][coo_j]);
+			}
+		}
+	}
+	return value;
 }
 
 IMAGE ouvertureImage(IMAGE image, int voisinage)
@@ -1747,8 +1774,8 @@ ELEMENT_STRUCTURANT allocation_ElementStructurant(const char* type, int hauteur,
 ELEMENT_STRUCTURANT allocation_ElementStructurant_disk(const char* type, int rayon) {
 	ELEMENT_STRUCTURANT ElementStructurant;
 	ElementStructurant.type = type;
-	ElementStructurant.hauteur = rayon;
-	ElementStructurant.largeur = rayon;
+	ElementStructurant.hauteur = rayon*2;
+	ElementStructurant.largeur = rayon*2;
 
 	int centreSE;
 	int tailleSE;
