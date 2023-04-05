@@ -1263,7 +1263,7 @@ int* LUTsansBord(SIGNATURE_COMPOSANTE_CONNEXE* signatures, int nbComp) {
 }
 
 IMAGE ImageAvecLUT(IMAGE image, int* LUT) {
-	IMAGE nouvelle = allocationImage(image.Nblig , image.Nbcol);
+	IMAGE nouvelle = allocationImage(image.Nblig, image.Nbcol);
 	for (int i = 0; i < (image.Nbcol * image.Nblig); i++) {
 		int val = image.data[i];
 		nouvelle.data[i] = LUT[val];
@@ -1707,71 +1707,183 @@ void remplissageV4(unsigned char** pixel, int x, int y, int colcible, int colrep
 	}
 }
 
-ELEMENT_STRUCTURANT allocation_ElementStructurant(const char* type, int rayon)
+ELEMENT_STRUCTURANT allocation_ElementStructurant(const char* type, int hauteur, int largeur)
 {
+
+	if (type == 'disk')
+	{
+		if (hauteur >= largeur) {
+			return allocation_ElementStructurant_disk(type, hauteur);
+		}
+		else {
+			return allocation_ElementStructurant_disk(type, largeur);
+		}
+	}
+	if (type == 'rect') {
+		return allocation_ElementStructurant_rect(type, hauteur, largeur);
+	}
+	if (type == 'ligV') {
+		return allocation_ElementStructurant_rect(type, hauteur, 1);
+	}
+	if (type == 'ligH') {
+		return allocation_ElementStructurant_rect(type, 1, largeur);
+	}
+	if (type == 'elip') {
+		return allocation_ElementStructurant_ellipse(type, hauteur, largeur);
+	}
+
+	return;
+}
+
+ELEMENT_STRUCTURANT allocation_ElementStructurant_disk(const char* type, int rayon) {
 	ELEMENT_STRUCTURANT ElementStructurant;
 	ElementStructurant.type = type;
 	ElementStructurant.hauteur = rayon;
 	ElementStructurant.largeur = rayon;
+
 	int centreSE;
 	int tailleSE;
 	int i;
 
-	if (ElementStructurant.type == 'disk')
+	tailleSE = pow((2 * rayon) + 1, 2);
+	ElementStructurant.data = (unsigned char*)calloc(tailleSE, sizeof(unsigned char));
+	if (ElementStructurant.data == NULL)
 	{
-		tailleSE = pow((2 * rayon) + 1, 2);
-		ElementStructurant.data = (unsigned char*)calloc(tailleSE, sizeof(unsigned char));
-		if (ElementStructurant.data == NULL)
-		{
-			return(ElementStructurant);
-		}
-		ElementStructurant.pixel = (unsigned char**)malloc(((2 * rayon) + 1) * sizeof(unsigned char*));
-		if (ElementStructurant.pixel == NULL) {
-			free(ElementStructurant.data);
-			ElementStructurant.data = NULL;
-			return(ElementStructurant);
-		}
-
-		for (i = 0; i < ((2 * rayon) + 1); i++)
-		{
-			ElementStructurant.pixel[i] = &ElementStructurant.data[i * ((2 * rayon) + 1)];
-		}
-
-		centreSE = floor((tailleSE) / 2.0);
-		int centerX = rayon;
-		int centerY = rayon;
-
-		int x = 0;
-		int y = rayon;
-		int m = 5 - 4 * rayon;
-
-		while (x <= y)
-		{
-			ElementStructurant.pixel[centerX + x][centerY + y] = 1;
-			ElementStructurant.pixel[centerX + x][centerY - y] = 1;
-			ElementStructurant.pixel[centerX - x][centerY + y] = 1;
-			ElementStructurant.pixel[centerX - x][centerY - y] = 1;
-			ElementStructurant.pixel[centerX + y][centerY + x] = 1;
-			ElementStructurant.pixel[centerX + y][centerY - x] = 1;
-			ElementStructurant.pixel[centerX - y][centerY + x] = 1;
-			ElementStructurant.pixel[centerX - y][centerY - x] = 1;
-
-			if (m > 0)
-			{
-				y--;
-				m -= 8 * y;
-			}
-
-			x++;
-
-			m += 8 * x + 4;
-		}
-
-		remplissageV4(ElementStructurant.pixel, rayon, rayon, 0, 1);
+		return(ElementStructurant);
+	}
+	ElementStructurant.pixel = (unsigned char**)malloc(((2 * rayon) + 1) * sizeof(unsigned char*));
+	if (ElementStructurant.pixel == NULL) {
+		free(ElementStructurant.data);
+		ElementStructurant.data = NULL;
+		return(ElementStructurant);
 	}
 
-	return(ElementStructurant);
+	for (i = 0; i < ((2 * rayon) + 1); i++)
+	{
+		ElementStructurant.pixel[i] = &ElementStructurant.data[i * ((2 * rayon) + 1)];
+	}
+
+	centreSE = floor((tailleSE) / 2.0);
+	int centerX = rayon;
+	int centerY = rayon;
+
+	int x = 0;
+	int y = rayon;
+	int m = 5 - 4 * rayon;
+
+	while (x <= y)
+	{
+		ElementStructurant.pixel[centerX + x][centerY + y] = 1;
+		ElementStructurant.pixel[centerX + x][centerY - y] = 1;
+		ElementStructurant.pixel[centerX - x][centerY + y] = 1;
+		ElementStructurant.pixel[centerX - x][centerY - y] = 1;
+		ElementStructurant.pixel[centerX + y][centerY + x] = 1;
+		ElementStructurant.pixel[centerX + y][centerY - x] = 1;
+		ElementStructurant.pixel[centerX - y][centerY + x] = 1;
+		ElementStructurant.pixel[centerX - y][centerY - x] = 1;
+
+		if (m > 0)
+		{
+			y--;
+			m -= 8 * y;
+		}
+
+		x++;
+
+		m += 8 * x + 4;
+	}
+
+	remplissageV4(ElementStructurant.pixel, rayon, rayon, 0, 1);
+	return ElementStructurant;
 }
+
+ELEMENT_STRUCTURANT allocation_ElementStructurant_rect(const char* type, int hauteur, int largeur) {
+	ELEMENT_STRUCTURANT ElementStructurant;
+	ElementStructurant.type = type;
+	ElementStructurant.hauteur = hauteur;
+	ElementStructurant.largeur = largeur;
+
+	int tailleSE = hauteur * largeur;
+	ElementStructurant.data = (unsigned char*)calloc(tailleSE, sizeof(unsigned char));
+	if (ElementStructurant.data == NULL) {
+		return ElementStructurant;
+	}
+
+	ElementStructurant.pixel = (unsigned char**)malloc(hauteur * sizeof(unsigned char*));
+	if (ElementStructurant.pixel == NULL) {
+		free(ElementStructurant.data);
+		ElementStructurant.data = NULL;
+		return ElementStructurant;
+	}
+
+	for (int i = 0; i < hauteur; i++) {
+		ElementStructurant.pixel[i] = &ElementStructurant.data[i * largeur];
+	}
+
+	for (int i = 0; i < hauteur; i++) {
+		for (int j = 0; j < largeur; j++) {
+			ElementStructurant.pixel[i][j] = 1;
+		}
+	}
+
+	return ElementStructurant;
+}
+
+ELEMENT_STRUCTURANT allocation_ElementStructurant_ellipse(const char* type, int hauteur, int largeur)
+{
+	ELEMENT_STRUCTURANT ElementStructurant;
+	ElementStructurant.type = type;
+	ElementStructurant.hauteur = 2 * hauteur + 1;
+	ElementStructurant.largeur = 2 * largeur + 1;
+
+	int centreSE;
+	int tailleSE;
+	int i, j;
+
+	tailleSE = ElementStructurant.hauteur * ElementStructurant.largeur;
+	ElementStructurant.data = (unsigned char*)calloc(tailleSE, sizeof(unsigned char));
+	if (ElementStructurant.data == NULL)
+	{
+		return(ElementStructurant);
+	}
+	ElementStructurant.pixel = (unsigned char**)malloc(ElementStructurant.hauteur * sizeof(unsigned char*));
+	if (ElementStructurant.pixel == NULL) {
+		free(ElementStructurant.data);
+		ElementStructurant.data = NULL;
+		return(ElementStructurant);
+	}
+
+	for (i = 0; i < ElementStructurant.hauteur; i++)
+	{
+		ElementStructurant.pixel[i] = &ElementStructurant.data[i * ElementStructurant.largeur];
+	}
+
+	centreSE = floor(tailleSE / 2.0);
+	int centerX = largeur;
+	int centerY = hauteur;
+
+	double x, y;
+	double test;
+
+	for (i = 0; i < ElementStructurant.hauteur; i++)
+	{
+		for (j = 0; j < ElementStructurant.largeur; j++)
+		{
+			x = (j - centerX) * 1.0 / largeur;
+			y = (i - centerY) * 1.0 / hauteur;
+			test = x * x + y * y;
+
+			if (test <= 1)
+			{
+				ElementStructurant.pixel[i][j] = 1;
+			}
+		}
+	}
+
+	//remplissageV4(ElementStructurant.pixel, ElementStructurant.hauteur, ElementStructurant.largeur, 0, 1);
+	return ElementStructurant;
+}
+
 #pragma endregion
 
 #pragma region Revision Eval 3
@@ -1802,8 +1914,6 @@ IMAGERGB masqueImage(IMAGE image, IMAGERGB masque) {
 	}
 	return rgb;
 }
-
-
 #pragma endregion
 
 #pragma region Eval2 

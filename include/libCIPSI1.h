@@ -167,7 +167,10 @@ IMAGE blackTopHat(IMAGE img, int voisinage, int n_iteration);
 #pragma endregion
 
 #pragma region Element structurant
-ELEMENT_STRUCTURANT allocation_ElementStructurant(const char* type, int rayon);
+ELEMENT_STRUCTURANT allocation_ElementStructurant(const char* type, int hauteur , int largeur);
+ELEMENT_STRUCTURANT allocation_ElementStructurant_disk(const char* type, int rayon);
+ELEMENT_STRUCTURANT allocation_ElementStructurant_rect(const char* type, int hauteur, int largeur);
+ELEMENT_STRUCTURANT allocation_ElementStructurant_ellipse(const char* type, int hauteur, int largeur);
 void remplissageV4(unsigned char** pixel, int x, int y, int colcible, int colrep);
 #pragma endregion
 
