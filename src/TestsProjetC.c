@@ -94,13 +94,47 @@ int main(void)
 	printf("\n");
 	printf("\n");
 
-	ELEMENT_STRUCTURANT ElementStructurant_ellipse = allocation_ElementStructurant('elip', hauteur, largeur);
+	ELEMENT_STRUCTURANT ElementStructurant_ellipse = allocation_ElementStructurant('elli', hauteur, largeur);
 
 	for (int i = 0; i < ElementStructurant_ellipse.hauteur; i++)
 	{
 		for (int j = 0; j < ElementStructurant_ellipse.largeur; j++)
 		{
 			printf("%d", ElementStructurant_ellipse.pixel[i][j]);
+		}
+		printf("\n");
+	}
+
+	printf("\n");
+	printf("\n");
+	printf("\n");
+	printf("\n");
+	printf("\n");
+
+	ELEMENT_STRUCTURANT ElementStructurant_V4 = allocation_ElementStructurant('V4', hauteur, largeur);
+
+	for (int i = 0; i < ElementStructurant_V4.hauteur; i++)
+	{
+		for (int j = 0; j < ElementStructurant_V4.largeur; j++)
+		{
+			printf("%d", ElementStructurant_V4.pixel[i][j]);
+		}
+		printf("\n");
+	}
+
+	printf("\n");
+	printf("\n");
+	printf("\n");
+	printf("\n");
+	printf("\n");
+
+	ELEMENT_STRUCTURANT ElementStructurant_V8 = allocation_ElementStructurant('V8', hauteur, largeur);
+
+	for (int i = 0; i < ElementStructurant_V8.hauteur; i++)
+	{
+		for (int j = 0; j < ElementStructurant_V8.largeur; j++)
+		{
+			printf("%d", ElementStructurant_V8.pixel[i][j]);
 		}
 		printf("\n");
 	}

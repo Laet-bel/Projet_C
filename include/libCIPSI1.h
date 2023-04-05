@@ -129,6 +129,8 @@ IMAGE erosionImage(IMAGE img, int voisinage);
 /// <param name="4 => V4 / 8 => V8"></param>
 /// <returns></returns>
 IMAGE dilatationImage(IMAGE img, int voisinage);
+
+IMAGE erosionImageavecSE(IMAGE image, const ELEMENT_STRUCTURANT se);
 /// <summary>
 /// Ouverture
 /// </summary>

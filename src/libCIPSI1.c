@@ -1576,6 +1576,9 @@ IMAGE dilatationImage(IMAGE image, int voisinage)
 	return imageDilate;
 }
 
+IMAGE erosionImageavecSE(IMAGE image,const ELEMENT_STRUCTURANT se) {
+	return image;
+}
 
 IMAGE ouvertureImage(IMAGE image, int voisinage)
 {
@@ -1728,8 +1731,14 @@ ELEMENT_STRUCTURANT allocation_ElementStructurant(const char* type, int hauteur,
 	if (type == 'ligH') {
 		return allocation_ElementStructurant_rect(type, 1, largeur);
 	}
-	if (type == 'elip') {
+	if (type == 'elli') {
 		return allocation_ElementStructurant_ellipse(type, hauteur, largeur);
+	}
+	if (type == 'V4') {
+		return allocation_ElementStructurant_ellipse(type, 1,1);
+	}
+	if (type == 'V8') {
+		return allocation_ElementStructurant_rect(type, 3, 3);
 	}
 
 	return;
@@ -1879,8 +1888,6 @@ ELEMENT_STRUCTURANT allocation_ElementStructurant_ellipse(const char* type, int 
 			}
 		}
 	}
-
-	//remplissageV4(ElementStructurant.pixel, ElementStructurant.hauteur, ElementStructurant.largeur, 0, 1);
 	return ElementStructurant;
 }
 
