@@ -5,7 +5,7 @@
 
 int main(void)
 {
-	IMAGE test = lectureImage("Source Images/In_30.pgm");
+	/*IMAGE test = lectureImage("Source Images/In_30.pgm");
 	IMAGE testInv = inverseImage(test);
 	sauvegardeImage(test, "P5", "W_inv.pgm");
 
@@ -20,9 +20,9 @@ int main(void)
 	WTH = dilatationImage(WTH, 4);
 
 
-	sauvegardeImage(WTH, "P5", "In_30_WTH_OTSU_erode.pgm");
+	sauvegardeImage(WTH, "P5", "In_30_WTH_OTSU_erode.pgm");*/
 
-	/*int rayon = 20;
+	int rayon = 20;
 	ELEMENT_STRUCTURANT ElementStructurant = allocation_ElementStructurant('disk', rayon);
 
 	for (int i = 0; i < 2 * rayon + 1; i++)
@@ -32,7 +32,7 @@ int main(void)
 			printf("%d", ElementStructurant.pixel[i][j]);
 		}
 		printf("\n");
-	}*/
+	}
 
 	return 0;
 }

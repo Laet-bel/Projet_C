@@ -54,7 +54,8 @@ typedef struct
 
 typedef struct element_structurant {
 	char* type;
-	int rayon;
+	int hauteur;
+	int largeur;
 	unsigned char* data;
 	unsigned char** pixel;
 } ELEMENT_STRUCTURANT;

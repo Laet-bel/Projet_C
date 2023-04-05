@@ -1711,38 +1711,39 @@ ELEMENT_STRUCTURANT allocation_ElementStructurant(const char* type, int rayon)
 {
 	ELEMENT_STRUCTURANT ElementStructurant;
 	ElementStructurant.type = type;
-	ElementStructurant.rayon = rayon;
+	ElementStructurant.hauteur = rayon;
+	ElementStructurant.largeur = rayon;
 	int centreSE;
 	int tailleSE;
 	int i;
 
 	if (ElementStructurant.type == 'disk')
 	{
-		tailleSE = pow((2 * ElementStructurant.rayon) + 1, 2);
+		tailleSE = pow((2 * rayon) + 1, 2);
 		ElementStructurant.data = (unsigned char*)calloc(tailleSE, sizeof(unsigned char));
 		if (ElementStructurant.data == NULL)
 		{
 			return(ElementStructurant);
 		}
-		ElementStructurant.pixel = (unsigned char**)malloc(((2 * ElementStructurant.rayon) + 1) * sizeof(unsigned char*));
+		ElementStructurant.pixel = (unsigned char**)malloc(((2 * rayon) + 1) * sizeof(unsigned char*));
 		if (ElementStructurant.pixel == NULL) {
 			free(ElementStructurant.data);
 			ElementStructurant.data = NULL;
 			return(ElementStructurant);
 		}
 
-		for (i = 0; i < ((2 * ElementStructurant.rayon) + 1); i++)
+		for (i = 0; i < ((2 * rayon) + 1); i++)
 		{
-			ElementStructurant.pixel[i] = &ElementStructurant.data[i * ((2 * ElementStructurant.rayon) + 1)];
+			ElementStructurant.pixel[i] = &ElementStructurant.data[i * ((2 * rayon) + 1)];
 		}
 
 		centreSE = floor((tailleSE) / 2.0);
-		int centerX = ElementStructurant.rayon;
-		int centerY = ElementStructurant.rayon;
+		int centerX = rayon;
+		int centerY = rayon;
 
 		int x = 0;
-		int y = ElementStructurant.rayon;
-		int m = 5 - 4 * ElementStructurant.rayon;
+		int y = rayon;
+		int m = 5 - 4 * rayon;
 
 		while (x <= y)
 		{
@@ -1766,7 +1767,7 @@ ELEMENT_STRUCTURANT allocation_ElementStructurant(const char* type, int rayon)
 			m += 8 * x + 4;
 		}
 
-		remplissageV4(ElementStructurant.pixel, ElementStructurant.rayon, ElementStructurant.rayon, 0, 1);
+		remplissageV4(ElementStructurant.pixel, rayon, rayon, 0, 1);
 	}
 
 	return(ElementStructurant);
