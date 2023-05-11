@@ -5,7 +5,7 @@
 
 int main(void)
 {
-	/*IMAGE test = lectureImage("Source Images/In_30.pgm");
+	IMAGE test = lectureImage("Source Images/In_30.pgm");
 	IMAGE testInv = inverseImage(test);
 	sauvegardeImage(test, "P5", "W_inv.pgm");
 
@@ -20,7 +20,7 @@ int main(void)
 	WTH = dilatationImage(WTH, 4);
 
 
-	sauvegardeImage(WTH, "P5", "In_30_WTH_OTSU_erode.pgm");*/
+	sauvegardeImage(WTH, "P5", "In_30_WTH_OTSU_erode.pgm");
 
 	int rayon = 3;
 	int hauteur = 3;
@@ -138,6 +138,26 @@ int main(void)
 		}
 		printf("\n");
 	}
+
+	IMAGE test_SE = lectureImage("Source Images/In_30.pgm");
+	IMAGE testInv_SE = inverseImage(test_SE);
+	sauvegardeImage(test_SE, "P5", "W_inv.pgm");
+
+	IMAGE WTH_SE = whiteTopHat(testInv_SE, 4, 30);
+	sauvegardeImage(WTH_SE, "P5", "WTH_SE.pgm");
+
+	WTH_SE = seuillageOtsu(WTH_SE);
+	sauvegardeImage(WTH_SE, "P5", "WTH_OTSU_SE.pgm");
+
+	WTH_SE = erosionImageavecSE(WTH_SE, ElementStructurant_V4);
+	WTH_SE = erosionImageavecSE(WTH_SE, ElementStructurant_V4);
+	WTH_SE = dilatationImageavecSE(WTH_SE, ElementStructurant_V4);
+
+
+	sauvegardeImage(WTH_SE, "P5", "In_30_WTH_OTSU_erode_SE.pgm");
+
+
+
 
 
 

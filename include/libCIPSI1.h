@@ -131,6 +131,10 @@ IMAGE erosionImage(IMAGE img, int voisinage);
 IMAGE dilatationImage(IMAGE img, int voisinage);
 
 IMAGE erosionImageavecSE(IMAGE image, const ELEMENT_STRUCTURANT se);
+int min_SE(IMAGE img, ELEMENT_STRUCTURANT SE, int* i, int* j);
+IMAGE dilatationImageavecSE(IMAGE image, const ELEMENT_STRUCTURANT SE);
+int max_SE(IMAGE img, ELEMENT_STRUCTURANT SE, int* i, int* j);
+
 /// <summary>
 /// Ouverture
 /// </summary>
@@ -138,6 +142,7 @@ IMAGE erosionImageavecSE(IMAGE image, const ELEMENT_STRUCTURANT se);
 /// <param name="4 => V4 / 8 => V8"></param>
 /// <returns></returns>
 IMAGE ouvertureImage(IMAGE img, int voisinage);
+IMAGE ouvertureImageavecSE(IMAGE img, ELEMENT_STRUCTURANT SE);
 /// <summary>
 /// Fermeture
 /// </summary>
@@ -145,6 +150,8 @@ IMAGE ouvertureImage(IMAGE img, int voisinage);
 /// <param name="4 => V4 / 8 => V8"></param>
 /// <returns></returns>
 IMAGE fermetureImage(IMAGE img, int voisinage);
+IMAGE fermetureImageavecSE(IMAGE img, ELEMENT_STRUCTURANT SE);
+
 /// <summary>
 ///Contour des blobs
 /// </summary>
@@ -152,6 +159,7 @@ IMAGE fermetureImage(IMAGE img, int voisinage);
 /// <param name="4 => V4 / 8 => V8"></param>
 /// <returns>img des contours</returns>
 IMAGE contourImage(IMAGE img, int voisinage);
+
 /// <summary>
 /// White tophat
 /// </summary>
@@ -159,6 +167,7 @@ IMAGE contourImage(IMAGE img, int voisinage);
 /// <param name="voisinage">4 => V4 / 8 => V8</param>
 /// <returns></returns>
 IMAGE whiteTopHat(IMAGE img, int voisinage, int n_iteration);
+IMAGE whiteTopHatavecSE(IMAGE img, ELEMENT_STRUCTURANT SE, int n_iteration);
 /// <summary>
 /// Black tophat
 /// </summary>
@@ -166,6 +175,7 @@ IMAGE whiteTopHat(IMAGE img, int voisinage, int n_iteration);
 /// <param name="4 => V4 / 8 => V8"</param>
 /// <returns></returns>
 IMAGE blackTopHat(IMAGE img, int voisinage, int n_iteration);
+IMAGE blackTopHatavecSE(IMAGE img, ELEMENT_STRUCTURANT SE, int n_iteration);
 #pragma endregion
 
 #pragma region Element structurant
@@ -175,6 +185,7 @@ ELEMENT_STRUCTURANT allocation_ElementStructurant_rect(const char* type, int hau
 ELEMENT_STRUCTURANT allocation_ElementStructurant_ellipse(const char* type, int hauteur, int largeur);
 void remplissageV4(unsigned char** pixel, int x, int y, int colcible, int colrep);
 #pragma endregion
+
 
 #pragma region Revision Eval 3
 IMAGE bruitAleatoireImage(IMAGE img, int amplitude);
