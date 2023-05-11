@@ -1263,7 +1263,7 @@ int* LUTsansBord(SIGNATURE_COMPOSANTE_CONNEXE* signatures, int nbComp) {
 }
 
 IMAGE ImageAvecLUT(IMAGE image, int* LUT) {
-	IMAGE nouvelle = allocationImage(image.Nblig , image.Nbcol);
+	IMAGE nouvelle = allocationImage(image.Nblig, image.Nbcol);
 	for (int i = 0; i < (image.Nbcol * image.Nblig); i++) {
 		int val = image.data[i];
 		nouvelle.data[i] = LUT[val];
@@ -1576,6 +1576,100 @@ IMAGE dilatationImage(IMAGE image, int voisinage)
 	return imageDilate;
 }
 
+IMAGE erosionImageavecSE(IMAGE image, const ELEMENT_STRUCTURANT SE) {
+
+	IMAGE image_erodee = allocationImage(image.Nblig, image.Nbcol);
+
+	for (int i = 0; i < image.Nblig; i++)
+	{
+		for (int j = 0; j < image.Nbcol; j++)
+		{
+			image_erodee.pixel[i][j] = min_SE(image, SE, &i, &j);
+		}
+	}
+	return image_erodee;
+}
+
+/// <summary>
+/// Trouver le pixel minimum de SE appliquer à la coordonnée sur l'image
+/// </summary>
+/// <param name="img"> Image initiale </param>
+/// <param name="SE"> elément structurant </param>
+/// <param name="i"> coordonnée x</param>
+/// <param name="j"> coordonnée y </param>
+/// <returns></returns>
+int min_SE(IMAGE img, ELEMENT_STRUCTURANT SE, int* i, int* j)
+{ //TODO remettre mes nom variables  
+	int value = 255;
+	int cmpt_x = 0, cmpt_y = 0;
+	
+	for (int y = -SE.hauteur / 2.0; y < SE.hauteur / 2.0; y++)
+	{
+
+		for (int x = -SE.largeur / 2.0; x < SE.largeur / 2.0; x++)
+		{
+			//printf("SE.pixel[%d, %d] = %d", cmpt_y, cmpt_x, SE.pixel[cmpt_y, cmpt_x]);
+			if (((*i + y >= 0) && (*j + x >= 0))
+				&& ((*i + y <= img.Nblig - 1) && (*j + x <= img.Nbcol - 1)) //in img
+				&& (SE.pixel[cmpt_y][cmpt_x] != 0))
+			{
+				value = min(value, img.pixel[*i + y][*j + x]);
+			}
+			cmpt_x++;
+		}
+		cmpt_x = 0;
+		cmpt_y++;
+	}
+	return value;
+}
+
+IMAGE dilatationImageavecSE(IMAGE image, const ELEMENT_STRUCTURANT SE) {
+
+	IMAGE image_dilatee = allocationImage(image.Nblig, image.Nbcol);
+
+	for (int i = 0; i < image.Nblig; i++)
+	{
+		for (int j = 0; j < image.Nbcol; j++)
+		{
+			image_dilatee.pixel[i][j] = max_SE(image, SE, &i, &j);
+		}
+	}
+	return image_dilatee;
+}
+
+/// <summary>
+/// Trouver le pixel minimum de SE appliquer à la coordonnée sur l'image
+/// </summary>
+/// <param name="img"> Image initiale </param>
+/// <param name="SE"> elément structurant </param>
+/// <param name="i"> coordonnée x</param>
+/// <param name="j"> coordonnée y </param>
+/// <returns></returns>
+int max_SE(IMAGE img, ELEMENT_STRUCTURANT SE, int* i, int* j)
+{ //TODO remettre mes nom variables  
+	int value = 0;
+	int cmpt_x = 0, cmpt_y = 0;
+
+	for (int y = -SE.hauteur / 2.0; y < SE.hauteur / 2.0; y++)
+	{
+
+		for (int x = -SE.largeur / 2.0; x < SE.largeur / 2.0; x++)
+		{
+			if (((*i + y >= 0) && (*j + x >= 0))
+				&& ((*i + y <= img.Nblig - 1) && (*j + x <= img.Nbcol - 1)) //in img
+				&& (SE.pixel[cmpt_y][cmpt_x] != 0))
+			{
+				value = max(value, img.pixel[*i + y][*j + x]);
+			}
+			cmpt_x++;
+		}
+		cmpt_x = 0;
+		cmpt_y++;
+	}
+	return value;
+}
+
+
 
 IMAGE ouvertureImage(IMAGE image, int voisinage)
 {
@@ -1586,12 +1680,30 @@ IMAGE ouvertureImage(IMAGE image, int voisinage)
 	return imageOuverte;
 }
 
+IMAGE ouvertureImageavecSE(IMAGE image, ELEMENT_STRUCTURANT SE)
+{
+	IMAGE imageOuverte = allocationImage(image.Nblig, image.Nbcol);
+	IMAGE imageErode = erosionImageavecSE(image, SE);
+	imageOuverte = dilatationImageavecSE(imageErode, SE);
+
+	return imageOuverte;
+}
+
 
 IMAGE fermetureImage(IMAGE image, int voisinage)
 {
 	IMAGE imageFerme = allocationImage(image.Nblig, image.Nbcol);
 	IMAGE imageDilate = dilatationImage(image, voisinage);
 	imageFerme = erosionImage(image, voisinage);
+
+	return imageFerme;
+}
+
+IMAGE fermetureImageavecSE(IMAGE image, ELEMENT_STRUCTURANT SE)
+{
+	IMAGE imageFerme = allocationImage(image.Nblig, image.Nbcol);
+	IMAGE imageDilate = dilatationImageavecSE(image, SE);
+	imageFerme = erosionImageavecSE(image, SE);
 
 	return imageFerme;
 }
@@ -1657,6 +1769,42 @@ IMAGE whiteTopHat(IMAGE image, int voisinage, int n_iteration)
 	return whiteTopHat;
 }
 
+IMAGE whiteTopHatavecSE(IMAGE image, ELEMENT_STRUCTURANT SE, int n_iteration)
+{
+
+	IMAGE whiteTopHat = allocationImage(image.Nblig, image.Nbcol);
+	IMAGE imageTemp = allocationImage(image.Nblig, image.Nbcol);
+	imageTemp = erosionImageavecSE(image, SE);
+	for (int i = 0; i < n_iteration - 1; i++)
+	{
+		imageTemp = erosionImageavecSE(imageTemp, SE);
+	}
+	for (int i = 0; i < n_iteration; i++)
+	{
+		imageTemp = dilatationImageavecSE(imageTemp, SE);
+	}
+
+
+	int temp;
+	for (int i = 0; i < image.Nbcol * image.Nblig; i++)
+	{
+		temp = image.data[i] - imageTemp.data[i];
+
+		if (temp < 0)
+		{
+			temp = 0;
+		}
+		if (temp > 255)
+		{
+			temp = 255;
+		}
+
+		whiteTopHat.data[i] = temp;
+	}
+
+	return whiteTopHat;
+}
+
 IMAGE blackTopHat(IMAGE image, int voisinage, int n_iteration)
 {
 	IMAGE blackTopHat = allocationImage(image.Nblig, image.Nbcol);
@@ -1669,6 +1817,40 @@ IMAGE blackTopHat(IMAGE image, int voisinage, int n_iteration)
 	for (int i = 0; i < n_iteration; i++)
 	{
 		imageTemp = erosionImage(imageTemp, voisinage);
+	}
+
+	int temp;
+	for (int i = 0; i < image.Nbcol * image.Nblig; i++)
+	{
+		temp = imageTemp.data[i] - image.data[i];
+
+		if (temp < 0)
+		{
+			temp = 0;
+		}
+		if (temp > 255)
+		{
+			temp = 255;
+		}
+
+		blackTopHat.data[i] = temp;
+	}
+
+	return blackTopHat;
+}
+
+IMAGE blackTopHatavecSE(IMAGE image, ELEMENT_STRUCTURANT SE, int n_iteration)
+{
+	IMAGE blackTopHat = allocationImage(image.Nblig, image.Nbcol);
+	IMAGE imageTemp = allocationImage(image.Nblig, image.Nbcol);
+	imageTemp = dilatationImageavecSE(image, SE);
+	for (int i = 0; i < n_iteration - 1; i++)
+	{
+		imageTemp = dilatationImageavecSE(imageTemp, SE);
+	}
+	for (int i = 0; i < n_iteration; i++)
+	{
+		imageTemp = erosionImageavecSE(imageTemp, SE);
 	}
 
 	int temp;
@@ -1707,71 +1889,187 @@ void remplissageV4(unsigned char** pixel, int x, int y, int colcible, int colrep
 	}
 }
 
-ELEMENT_STRUCTURANT allocation_ElementStructurant(const char* type, int rayon)
+ELEMENT_STRUCTURANT allocation_ElementStructurant(const char* type, int hauteur, int largeur)
 {
+
+	if (type == 'disk')
+	{
+		if (hauteur >= largeur) {
+			return allocation_ElementStructurant_disk(type, hauteur);
+		}
+		else {
+			return allocation_ElementStructurant_disk(type, largeur);
+		}
+	}
+	if (type == 'rect') {
+		return allocation_ElementStructurant_rect(type, hauteur, largeur);
+	}
+	if (type == 'ligV') {
+		return allocation_ElementStructurant_rect(type, hauteur, 1);
+	}
+	if (type == 'ligH') {
+		return allocation_ElementStructurant_rect(type, 1, largeur);
+	}
+	if (type == 'elli') {
+		return allocation_ElementStructurant_ellipse(type, hauteur, largeur);
+	}
+	if (type == 'V4') {
+		return allocation_ElementStructurant_ellipse(type, 1, 1);
+	}
+	if (type == 'V8') {
+		return allocation_ElementStructurant_rect(type, 3, 3);
+	}
+
+	return;
+}
+
+ELEMENT_STRUCTURANT allocation_ElementStructurant_disk(const char* type, int rayon) {
 	ELEMENT_STRUCTURANT ElementStructurant;
 	ElementStructurant.type = type;
-	ElementStructurant.hauteur = rayon;
-	ElementStructurant.largeur = rayon;
+	ElementStructurant.hauteur = rayon * 2;
+	ElementStructurant.largeur = rayon * 2;
+
 	int centreSE;
 	int tailleSE;
 	int i;
 
-	if (ElementStructurant.type == 'disk')
+	tailleSE = pow((2 * rayon) + 1, 2);
+	ElementStructurant.data = (unsigned char*)calloc(tailleSE, sizeof(unsigned char));
+	if (ElementStructurant.data == NULL)
 	{
-		tailleSE = pow((2 * rayon) + 1, 2);
-		ElementStructurant.data = (unsigned char*)calloc(tailleSE, sizeof(unsigned char));
-		if (ElementStructurant.data == NULL)
-		{
-			return(ElementStructurant);
-		}
-		ElementStructurant.pixel = (unsigned char**)malloc(((2 * rayon) + 1) * sizeof(unsigned char*));
-		if (ElementStructurant.pixel == NULL) {
-			free(ElementStructurant.data);
-			ElementStructurant.data = NULL;
-			return(ElementStructurant);
-		}
-
-		for (i = 0; i < ((2 * rayon) + 1); i++)
-		{
-			ElementStructurant.pixel[i] = &ElementStructurant.data[i * ((2 * rayon) + 1)];
-		}
-
-		centreSE = floor((tailleSE) / 2.0);
-		int centerX = rayon;
-		int centerY = rayon;
-
-		int x = 0;
-		int y = rayon;
-		int m = 5 - 4 * rayon;
-
-		while (x <= y)
-		{
-			ElementStructurant.pixel[centerX + x][centerY + y] = 1;
-			ElementStructurant.pixel[centerX + x][centerY - y] = 1;
-			ElementStructurant.pixel[centerX - x][centerY + y] = 1;
-			ElementStructurant.pixel[centerX - x][centerY - y] = 1;
-			ElementStructurant.pixel[centerX + y][centerY + x] = 1;
-			ElementStructurant.pixel[centerX + y][centerY - x] = 1;
-			ElementStructurant.pixel[centerX - y][centerY + x] = 1;
-			ElementStructurant.pixel[centerX - y][centerY - x] = 1;
-
-			if (m > 0)
-			{
-				y--;
-				m -= 8 * y;
-			}
-
-			x++;
-
-			m += 8 * x + 4;
-		}
-
-		remplissageV4(ElementStructurant.pixel, rayon, rayon, 0, 1);
+		return(ElementStructurant);
+	}
+	ElementStructurant.pixel = (unsigned char**)malloc(((2 * rayon) + 1) * sizeof(unsigned char*));
+	if (ElementStructurant.pixel == NULL) {
+		free(ElementStructurant.data);
+		ElementStructurant.data = NULL;
+		return(ElementStructurant);
 	}
 
-	return(ElementStructurant);
+	for (i = 0; i < ((2 * rayon) + 1); i++)
+	{
+		ElementStructurant.pixel[i] = &ElementStructurant.data[i * ((2 * rayon) + 1)];
+	}
+
+	centreSE = floor((tailleSE) / 2.0);
+	int centerX = rayon;
+	int centerY = rayon;
+
+	int x = 0;
+	int y = rayon;
+	int m = 5 - 4 * rayon;
+
+	while (x <= y)
+	{
+		ElementStructurant.pixel[centerX + x][centerY + y] = 1;
+		ElementStructurant.pixel[centerX + x][centerY - y] = 1;
+		ElementStructurant.pixel[centerX - x][centerY + y] = 1;
+		ElementStructurant.pixel[centerX - x][centerY - y] = 1;
+		ElementStructurant.pixel[centerX + y][centerY + x] = 1;
+		ElementStructurant.pixel[centerX + y][centerY - x] = 1;
+		ElementStructurant.pixel[centerX - y][centerY + x] = 1;
+		ElementStructurant.pixel[centerX - y][centerY - x] = 1;
+
+		if (m > 0)
+		{
+			y--;
+			m -= 8 * y;
+		}
+
+		x++;
+
+		m += 8 * x + 4;
+	}
+
+	remplissageV4(ElementStructurant.pixel, rayon, rayon, 0, 1);
+	return ElementStructurant;
 }
+
+ELEMENT_STRUCTURANT allocation_ElementStructurant_rect(const char* type, int hauteur, int largeur) {
+	ELEMENT_STRUCTURANT ElementStructurant;
+	ElementStructurant.type = type;
+	ElementStructurant.hauteur = hauteur;
+	ElementStructurant.largeur = largeur;
+
+	int tailleSE = hauteur * largeur;
+	ElementStructurant.data = (unsigned char*)calloc(tailleSE, sizeof(unsigned char));
+	if (ElementStructurant.data == NULL) {
+		return ElementStructurant;
+	}
+
+	ElementStructurant.pixel = (unsigned char**)malloc(hauteur * sizeof(unsigned char*));
+	if (ElementStructurant.pixel == NULL) {
+		free(ElementStructurant.data);
+		ElementStructurant.data = NULL;
+		return ElementStructurant;
+	}
+
+	for (int i = 0; i < hauteur; i++) {
+		ElementStructurant.pixel[i] = &ElementStructurant.data[i * largeur];
+	}
+
+	for (int i = 0; i < hauteur; i++) {
+		for (int j = 0; j < largeur; j++) {
+			ElementStructurant.pixel[i][j] = 1;
+		}
+	}
+
+	return ElementStructurant;
+}
+
+ELEMENT_STRUCTURANT allocation_ElementStructurant_ellipse(const char* type, int hauteur, int largeur)
+{
+	ELEMENT_STRUCTURANT ElementStructurant;
+	ElementStructurant.type = type;
+	ElementStructurant.hauteur = 2 * hauteur + 1;
+	ElementStructurant.largeur = 2 * largeur + 1;
+
+	int centreSE;
+	int tailleSE;
+	int i, j;
+
+	tailleSE = ElementStructurant.hauteur * ElementStructurant.largeur;
+	ElementStructurant.data = (unsigned char*)calloc(tailleSE, sizeof(unsigned char));
+	if (ElementStructurant.data == NULL)
+	{
+		return(ElementStructurant);
+	}
+	ElementStructurant.pixel = (unsigned char**)malloc(ElementStructurant.hauteur * sizeof(unsigned char*));
+	if (ElementStructurant.pixel == NULL) {
+		free(ElementStructurant.data);
+		ElementStructurant.data = NULL;
+		return(ElementStructurant);
+	}
+
+	for (i = 0; i < ElementStructurant.hauteur; i++)
+	{
+		ElementStructurant.pixel[i] = &ElementStructurant.data[i * ElementStructurant.largeur];
+	}
+
+	centreSE = floor(tailleSE / 2.0);
+	int centerX = largeur;
+	int centerY = hauteur;
+
+	double x, y;
+	double test;
+
+	for (i = 0; i < ElementStructurant.hauteur; i++)
+	{
+		for (j = 0; j < ElementStructurant.largeur; j++)
+		{
+			x = (j - centerX) * 1.0 / largeur;
+			y = (i - centerY) * 1.0 / hauteur;
+			test = x * x + y * y;
+
+			if (test <= 1)
+			{
+				ElementStructurant.pixel[i][j] = 1;
+			}
+		}
+	}
+	return ElementStructurant;
+}
+
 #pragma endregion
 
 #pragma region Revision Eval 3
@@ -1802,8 +2100,6 @@ IMAGERGB masqueImage(IMAGE image, IMAGERGB masque) {
 	}
 	return rgb;
 }
-
-
 #pragma endregion
 
 #pragma region Eval2 
