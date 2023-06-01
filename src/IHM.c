@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libCIPSI1.h>
 
 int main()
 {
-    char path[100] = "C:\\Users\\Cordi\\Downloads\\2022-2023\\Source Images\\"; // A CHANGER SELON L'EMPLACEMENT DES IMAGES
+    char path[100] = "Source Images\\";
     char type[3];
     int choice;
     char start[5];

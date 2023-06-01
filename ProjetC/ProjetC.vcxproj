@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\IHM.c" />
     <ClCompile Include="..\src\libCIPSI1.c" />
     <ClCompile Include="..\src\TestsProjetC.c" />
   </ItemGroup>
