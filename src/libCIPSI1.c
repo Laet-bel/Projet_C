@@ -2087,7 +2087,9 @@ ELEMENT_STRUCTURANT allocation_ElementStructurant_ellipse(const char* type, int 
 //	*/
 //
 //}
+#pragma endregion
 
+#pragma region IOU
 float IOU_score(IMAGE traitee, IMAGE veritee) {
 	int intersection = 0;  // variable pour stocker l'intersection
 	int union_area = 0;  // variable pour stocker l'union
@@ -2110,6 +2112,51 @@ float IOU_score(IMAGE traitee, IMAGE veritee) {
 }
 
 #pragma endregion
+
+
+#pragma region Filtres
+IMAGE filtrageMedian(IMAGE img, int N)
+{
+	// Lexique local
+	IMAGE img_median = allocationImage(img.Nblig, img.Nbcol);
+	int cmpt_value = 0;
+	unsigned char* valeurs = (unsigned char)malloc(N * sizeof(unsigned char));
+
+	// Algorithme local
+	for (int i = 0; i < img.Nblig; i++) {
+		for (int j = 0; j < img.Nbcol; j++) {
+			// Collecte des valeurs
+			cmpt_value = 0;
+			for (int y = -N / 2; y <= N / 2; y++) {
+				for (int x = -N / 2; x <= N / 2; x++) {
+					if ((i + y >= 0) && (j + x >= 0) && (i + y < img.Nblig) && (j + x < img.Nbcol)) {
+						valeurs[cmpt_value++] = img.pixel[i + y][j + x];
+					}
+				}
+			}
+
+			// Tri des valeurs
+			for (int k = 0; k < cmpt_value - 1; k++) {
+				for (int l = 0; l < cmpt_value - k - 1; l++) {
+					if (valeurs[l] > valeurs[l + 1]) {
+						unsigned char temp = valeurs[l];
+						valeurs[l] = valeurs[l + 1];
+						valeurs[l + 1] = temp;
+					}
+				}
+			}
+
+			// Valeur médiane
+			unsigned char mediane = valeurs[cmpt_value / 2];
+			img_median.pixel[i][j] = mediane;
+		}
+	}
+
+	free(valeurs);
+	return img_median;
+}
+#pragma endregion
+
 
 #pragma region Revision Eval 3
 IMAGE bruitAleatoireImage(IMAGE image, int amplitude) {

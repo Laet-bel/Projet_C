@@ -190,7 +190,12 @@ void remplissageV4(unsigned char** pixel, int x, int y, int colcible, int colrep
 float IOU_score(IMAGE traitee, IMAGE veritee);
 #pragma endregion
 
+#pragma region Filtres
 
+IMAGE filtrageMedian(IMAGE img, int N);
+
+
+#pragma endregion
 
 #pragma region Revision Eval 3
 IMAGE bruitAleatoireImage(IMAGE img, int amplitude);
