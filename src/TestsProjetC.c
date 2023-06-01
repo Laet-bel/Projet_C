@@ -140,10 +140,11 @@ int main(void)
 	}
 
 	IMAGE test_SE = lectureImage("Source Images/In_30.pgm");
+	IMAGE true_SE = lectureImage("Ground truth/In_30.pgm");
 	IMAGE testInv_SE = inverseImage(test_SE);
 	sauvegardeImage(test_SE, "P5", "W_inv.pgm");
 
-	IMAGE WTH_SE = whiteTopHat(testInv_SE, 4, 30);
+	IMAGE WTH_SE = whiteTopHatavecSE(testInv_SE, ElementStructurant_V4, 30);
 	sauvegardeImage(WTH_SE, "P5", "WTH_SE.pgm");
 
 	WTH_SE = seuillageOtsu(WTH_SE);
@@ -156,6 +157,9 @@ int main(void)
 
 	sauvegardeImage(WTH_SE, "P5", "In_30_WTH_OTSU_erode_SE.pgm");
 
+
+	float IOU = IOU_score(WTH_SE, true_SE);
+	printf("IOU : %f", IOU);
 
 
 

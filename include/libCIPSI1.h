@@ -186,6 +186,11 @@ ELEMENT_STRUCTURANT allocation_ElementStructurant_ellipse(const char* type, int 
 void remplissageV4(unsigned char** pixel, int x, int y, int colcible, int colrep);
 #pragma endregion
 
+#pragma region IOU
+float IOU_score(IMAGE traitee, IMAGE veritee);
+#pragma endregion
+
+
 
 #pragma region Revision Eval 3
 IMAGE bruitAleatoireImage(IMAGE img, int amplitude);
