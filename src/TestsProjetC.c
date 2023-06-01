@@ -155,14 +155,11 @@
 //
 //	sauvegardeImage(WTH_SE, "P5", "In_30_WTH_OTSU_erode_SE.pgm");
 //
-//
+//	float IOU = IOU_score(WTH_SE, true_SE);
+//	printf("IOU : %f", IOU);
 //
 //
 //
 //
 //	return 0;
 //}
-
-{
-	float IOU = IOU_score(WTH_SE, true_SE);
-	printf("IOU : %f", IOU);
