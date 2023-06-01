@@ -2070,6 +2070,45 @@ ELEMENT_STRUCTURANT allocation_ElementStructurant_ellipse(const char* type, int 
 	return ElementStructurant;
 }
 
+//float IOU_score(IMAGE traitee, IMAGE veritee) {
+//	
+//	for (int i = 0; i < traitee.Nblig; i++) {
+//		for (int j = 0; j < traitee.Nbcol; j++) {
+//			traitee.pixel[i][j] = 1;
+//		}
+//	}
+//
+//
+//	/*% 
+//	% Calcul de l'IoU
+//	intersection = sum(sum(Igt & BW));
+//	union = sum(sum(Igt | BW));
+//	IoU = intersection / union;
+//	*/
+//
+//}
+
+float IOU_score(IMAGE traitee, IMAGE veritee) {
+	int intersection = 0;  // variable pour stocker l'intersection
+	int union_area = 0;  // variable pour stocker l'union
+
+	// Parcours de chaque pixel
+	for (int i = 0; i < traitee.Nblig; i++) {
+		for (int j = 0; j < traitee.Nbcol; j++) {
+			if (traitee.pixel[i][j] == 255 && veritee.pixel[i][j] == 255) {
+				intersection++;  // si le pixel est à la fois dans traitee et veritee, incrémenter l'intersection
+			}
+			if (traitee.pixel[i][j] == 255 || veritee.pixel[i][j] == 255) {
+				union_area++;  // si le pixel est soit dans traitee, soit dans veritee, incrémenter l'union
+			}
+		}
+	}
+
+	// Calcul du score IoU
+	float iou = (float)(intersection) / union_area;
+	return iou;
+}
+
 #pragma endregion
 
 #pragma region Revision Eval 3

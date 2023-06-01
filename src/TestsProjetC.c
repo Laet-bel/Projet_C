@@ -162,3 +162,7 @@
 //
 //	return 0;
 //}
+
+{
+	float IOU = IOU_score(WTH_SE, true_SE);
+	printf("IOU : %f", IOU);
