@@ -209,3 +209,6 @@ IMAGE imageSortieRegression(IMAGE img, char axe);
 POINT* GenerationAleatoirePointsDyn(int n, float min, float max);
 #pragma endregion
 
+#pragma region Loïc Test
+void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename);
+#pragma endregion

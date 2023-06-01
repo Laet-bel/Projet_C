@@ -2109,6 +2109,7 @@ float IOU_score(IMAGE traitee, IMAGE veritee) {
 	return iou;
 }
 
+
 #pragma endregion
 
 #pragma region Revision Eval 3
@@ -2184,5 +2185,20 @@ POINT* imageVersPoints(IMAGE image, int* n, char axe) {
 
 #pragma endregion
 
+#pragma region Loïc Test
 
+void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename) {
+    FILE* file = fopen(filename, "w");
 
+    if (file == NULL) {
+        printf("Erreur lors de l'ouverture du fichier %s\n", filename);
+        return;
+    }
+
+    for (int i = 0; i < size; i++) {
+        fprintf(file, "%f;%f\n", tab1[i], tab2[i]);
+    }
+
+    fclose(file);
+}
+#pragma endregion

@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\libCIPSI1.c" />
-    <ClCompile Include="..\src\TestsProjetC.c" />
+    <ClCompile Include="Test_sauvegarde.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\libCIPSI1.h" />

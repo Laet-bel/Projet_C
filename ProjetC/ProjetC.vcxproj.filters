@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\TestsProjetC.c">
+    <ClCompile Include="..\src\libCIPSI1.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\libCIPSI1.c">
+    <ClCompile Include="Test_sauvegarde.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
