@@ -2111,6 +2111,140 @@ float IOU_score(IMAGE traitee, IMAGE veritee) {
 
 #pragma endregion
 
+#pragma region Filtre 
+//void recuperation_blobs_communs(int* image_verite, int* image_traitee, int largeur, int hauteur, SIGNATURE_COMPOSANTE_CONNEXE* blobs_verite, int nb_blobs_verite, SIGNATURE_COMPOSANTE_CONNEXE** blobs_communs, int* nb_blobs_communs) {
+//	*nb_blobs_communs = 0;
+//
+//	for (int i = 0; i < nb_blobs_verite; i++) {
+//		SIGNATURE_COMPOSANTE_CONNEXE blob_verite = blobs_verite[i];
+//
+//		// Vérifier si le blob de l'image vérité existe également dans l'image traitée
+//		if (blob_verite.CG.x >= 0 && blob_verite.CG.x < largeur && blob_verite.CG.y >= 0 && blob_verite.y < hauteur) {
+//			int pixel_verite = image_verite[blob_verite.CG.y * largeur + blob_verite.CG.x];
+//			int pixel_traitee = image_traitee[blob_verite.CG.y * largeur + blob_verite.CG.x];
+//
+//			// Si le pixel dans l'image traitée correspond également à un blob
+//			if (pixel_verite == 1 && pixel_traitee == 1) {
+//				// Ajouter le blob commun à la liste des blobs communs
+//				blobs_communs[*nb_blobs_communs] = malloc(sizeof(SIGNATURE_COMPOSANTE_CONNEXE));
+//				blobs_communs[*nb_blobs_communs]->CG.x = blob_verite.CG.x;
+//				blobs_communs[*nb_blobs_communs]->CG.y = blob_verite.CG.y;
+//				blobs_communs[*nb_blobs_communs]->surface = blob_verite.surface;
+//				blobs_communs[*nb_blobs_communs]->rayon = blob_verite.rayon;
+//				(*nb_blobs_communs)++;
+//			}
+//		}
+//	}
+//}
+//
+//int* recuperation_blobs_communs2(int* image_verite, int* image_traitee, int largeur, int hauteur, SIGNATURE_COMPOSANTE_CONNEXE* blobs_verite, int nb_blobs_verite) {
+//	int* nouvelle_image = malloc(largeur * hauteur * sizeof(int));
+//
+//	for (int i = 0; i < largeur * hauteur; i++) {
+//		nouvelle_image[i] = 0; // Initialiser tous les pixels à 0
+//	}
+//
+//	for (int i = 0; i < nb_blobs_verite; i++) {
+//		SIGNATURE_COMPOSANTE_CONNEXE blob_verite = blobs_verite[i];
+//
+//		// Vérifier si le blob de l'image vérité existe également dans l'image traitée
+//		if (blob_verite.CG.x >= 0 && blob_verite.CG.x < largeur && blob_verite.CG.y >= 0 && blob_verite.y < hauteur) {
+//			int pixel_verite = image_verite[blob_verite.CG.y * largeur + blob_verite.CG.x];
+//			int pixel_traitee = image_traitee[blob_verite.CG.y * largeur + blob_verite.CG.x];
+//
+//			// Si le pixel dans l'image traitée correspond également à un blob
+//			if (pixel_verite == 1 && pixel_traitee == 1) {
+//				nouvelle_image[blob_verite.CG.y * largeur + blob_verite.CG.x] = 1; // Marquer le pixel comme faisant partie d'un blob commun
+//			}
+//		}
+//	}
+//
+//	return nouvelle_image;
+//}
+
+//int* recuperation_blobs_communs3(int* image_verite, int* image_traitee, int largeur, int hauteur, SIGNATURE_COMPOSANTE_CONNEXE* blobs_verite, int nb_blobs_verite) {
+//	int* nouvelle_image = malloc(largeur * hauteur * sizeof(int));
+//
+//	for (int i = 0; i < largeur * hauteur; i++) {
+//		nouvelle_image[i] = 0; // Initialiser tous les pixels à 0
+//	}
+//
+//	for (int i = 0; i < nb_blobs_verite; i++) {
+//		SIGNATURE_COMPOSANTE_CONNEXE blob_verite = blobs_verite[i];
+//
+//		// Vérifier si le centre de gravité du blob de l'image vérité est contenu dans le blob correspondant de l'image traitée
+//		if (blob_verite.CG.x >= 0 && blob_verite.CG.x < largeur && blob_verite.CG.y >= 0 && blob_verite.CG.y < hauteur) {
+//			int pixel_verite = image_verite[(int)blob_verite.CG.y * largeur + (int)blob_verite.CG.x];
+//			int pixel_traitee = image_traitee[(int)blob_verite.CG.y * largeur + (int)blob_verite.CG.x];
+//
+//			// Si le pixel dans l'image traitée correspond également à un blob
+//			if (pixel_verite == 1 && pixel_traitee == 1) {
+//				nouvelle_image[(int)blob_verite.CG.y * largeur + (int)blob_verite.CG.x] = 1; // Marquer le pixel comme faisant partie d'un blob commun
+//			}
+//		}
+//	}
+//
+//	return nouvelle_image;
+//}
+
+IMAGE recuperation_blobs_communs4(IMAGE image_verite, IMAGE image_traitee, int largeur, int hauteur, SIGNATURE_COMPOSANTE_CONNEXE* blobs_verite, int nb_blobs_verite) {
+	IMAGE nouvelle_image = allocationImage(image_verite.Nblig, image_verite.Nbcol);
+
+	for (int i = 0; i < hauteur; i++) {
+		for (int j = 0; j < largeur; j++) {
+			nouvelle_image.pixel[i][j] = 0; // Initialiser tous les pixels à 0
+		}
+	}
+
+	for (int i = 0; i < nb_blobs_verite; i++) {
+		SIGNATURE_COMPOSANTE_CONNEXE blob_verite = blobs_verite[i];
+		int x_cg = (int)blob_verite.CG.x;
+		int y_cg = (int)blob_verite.CG.y;
+
+		// Vérifier si le centre de gravité du blob de l'image vérité est contenu dans le blob correspondant de l'image traitée
+		if (x_cg >= 0 && x_cg < largeur && y_cg >= 0 && y_cg < hauteur) {
+			int pixel_verite = image_verite.pixel[y_cg][x_cg];
+			int pixel_traitee = image_traitee.pixel[y_cg][x_cg];
+
+			// Si le pixel dans l'image traitée correspond également à un blob
+			if (pixel_verite == 1 && pixel_traitee == 1) {
+				nouvelle_image.pixel[y_cg][x_cg] = 1; // Marquer le pixel comme faisant partie d'un blob commun
+			}
+		}
+	}
+	return nouvelle_image;
+}
+
+
+
+// segmenter 2nde image + créer lut pour 2nd image
+// faire test couleur par couleur de nos blob sur image 1
+// Test sur chaque centre de gravité si dans double du rayon || si centre de gravité contenu dans le blob vérité
+// Si oui mettre 255 à la valeur des couleur des centres de gravitées dans LUT sinon 0
+// Appliquer table de véritée à image traité 
+
+IMAGE recuperation_blobs_communs(IMAGE image_verite, IMAGE image_traitee, int largeur, int hauteur, SIGNATURE_COMPOSANTE_CONNEXE* blobs_verite, int nb_blobs_verite) {
+	IMAGE nouvelle_image = allocationImage(image_verite.Nblig, image_verite.Nbcol);
+
+	for (int i = 0; i < nb_blobs_verite; i++) {
+		SIGNATURE_COMPOSANTE_CONNEXE blob_verite = blobs_verite[i];
+
+		// Vérifier si le centre de gravité du blob de l'image vérité est contenu dans le blob correspondant de l'image traitée
+		if (blob_verite.CG.x >= 0 && blob_verite.CG.x < largeur && blob_verite.CG.y >= 0 && blob_verite.CG.y < hauteur) {
+			int pixel_verite = image_verite.pixel[(int)blob_verite.CG.y][(int)blob_verite.CG.x];
+			int pixel_traitee = image_traitee.pixel[(int)blob_verite.CG.y][(int)blob_verite.CG.x];
+
+			// Si le pixel dans l'image traitée correspond également à un blob
+			if (pixel_verite == 1 && pixel_traitee == 1) {
+				nouvelle_image.pixel[(int)blob_verite.CG.y][(int)blob_verite.CG.x] = 1; // Marquer le pixel comme faisant partie d'un blob commun
+			}
+		}
+	}
+	return nouvelle_image;
+}
+#pragma endregion
+
+
 #pragma region Revision Eval 3
 IMAGE bruitAleatoireImage(IMAGE image, int amplitude) {
 	IMAGE bruit = image;
