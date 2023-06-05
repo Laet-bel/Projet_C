@@ -194,7 +194,12 @@ float IOU_score(IMAGE traitee, IMAGE veritee);
 
 IMAGE filtrageMedian(IMAGE img, int N);
 
+#pragma endregion
 
+#pragma region Fonction Image
+void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename);
+float* Image_In(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURANT se, int nb_it);
+float* Image_Sc(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURANT se, int nb_it);
 #pragma endregion
 
 #pragma region Revision Eval 3

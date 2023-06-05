@@ -25,6 +25,9 @@ int main()
     char end[5];
     char input[10];
     char element[10];
+    ELEMENT_STRUCTURANT se;
+    char** imagePaths;
+    char** veriteTerrainPaths;
 
     while (1)
     {
@@ -86,11 +89,38 @@ int main()
         }
         else if (strcmp(input, "2") == 0)
         {
-            for (int i = 0; i < 300; i++)
+            imagePaths = malloc(sizeof(char*) * 300);
+            veriteTerrainPaths = malloc(sizeof(char*) * 300);
+
+            if (strcmp(type, "In") == 0) 
             {
-                sprintf(path[i], "Source Images\\%s_%d.pgm", type, i + 1);
-                sprintf(pathVT[i], "Ground truth\\%s_%d.pgm", type, i + 1);
+                for (int i = 0; i < 300; i++) {
+                    imagePaths[i] = malloc(sizeof(char) * 100);
+                    veriteTerrainPaths[i] = malloc(sizeof(char) * 100);
+
+                    sprintf(imagePaths[i], "%s%s_%d.pgm", path, type, i + 1);
+                    sprintf(veriteTerrainPaths[i], "%s%s_%d.pgm", pathVT, type, i + 1);
+                }
+                results = Image_In(imagePaths, veriteTerrainPaths, se, 300);
             }
+            else if (strcmp(type, "Sc") == 0) 
+            {
+                for (int i = 0; i < 300; i++) 
+                {
+                    imagePaths[i] = malloc(sizeof(char) * 100);
+                    veriteTerrainPaths[i] = malloc(sizeof(char) * 100);
+
+                    sprintf(imagePaths[i], "%s%s_%d.pgm", path, type, i + 1);
+                    sprintf(veriteTerrainPaths[i], "%s%s_%d.pgm", pathVT, type, i + 1);
+                }
+                results = Image_Sc(imagePaths, veriteTerrainPaths, se, 300);
+            }
+            printf("Résultats :\n");
+            printf("Score IOU : %f\n", results[0]);
+            printf("Moyenne : %f\n", results[1]);
+
+            // Libération de la mémoire
+            free(results);
             break;
         }
         else if (strcmp(input, "3") == 0)
