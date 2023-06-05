@@ -2157,6 +2157,116 @@ IMAGE filtrageMedian(IMAGE img, int N)
 }
 #pragma endregion
 
+#pragma region Fonction Image
+void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename)
+{
+	FILE* file = fopen(filename, "w");
+
+	if (file == NULL) {
+		printf("Erreur lors de l'ouverture du fichier %s\n", filename);
+		return;
+	}
+
+	for (int i = 0; i < size; i++) {
+		fprintf(file, "%f;%f\n", tab1[i], tab2[i]);
+	}
+
+	fclose(file);
+}
+float* Image_In(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURANT se, int nb_it)
+{
+	int compteur = 0;
+	float ajout_score = 0.0f;
+	float* tableau_IOU = malloc(sizeof(float) * nb_it);
+	float* tableau_Moy = malloc(sizeof(float) * nb_it);
+
+	IMAGE imageTemp, imageTraitee;
+	for (int i = 0; i < nb_it; i++)
+	{
+		// Charger l'image
+		IMAGE image = lectureImage(imagePaths[i]);
+		IMAGE veriteTerrain = lectureImage(veriteTerrainPaths[i]);
+
+		// Traitement sur l'image
+		imageTemp = inverseImage(image);
+		imageTraitee = whiteTopHatavecSE(imageTemp, se, 30);
+		imageTraitee = seuillageOtsu(imageTraitee);
+		imageTraitee = erosionImageavecSE(imageTraitee, se);
+		imageTraitee = erosionImageavecSE(imageTraitee, se);
+		imageTraitee = dilatationImageavecSE(imageTraitee, se);
+
+		// Calcul du score IOU
+		float IOU = IOU_score(imageTraitee, veriteTerrain);
+		tableau_IOU[i] = IOU;
+
+		// Accumulation des scores
+		ajout_score += IOU;
+		compteur++;
+
+		// Calcul de la moyenne et ajout au tableau
+		tableau_Moy[i] = ajout_score / compteur;
+	}
+
+	// Sauvegarde du tableau dans un fichier CSV
+	sauvegardeCSV(tableau_IOU, tableau_Moy, nb_it, "resultat.csv");
+
+	float* resultats = malloc(sizeof(float) * 2);
+	resultats[0] = tableau_IOU[nb_it - 1]; // Dernier IOU
+	resultats[1] = tableau_Moy[nb_it - 1]; // Moyenne finale
+
+	// N'oubliez pas de libérer la mémoire
+	free(tableau_IOU);
+	free(tableau_Moy);
+
+	return resultats;
+}
+float* Image_Sc(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURANT se, int nb_it)
+{
+	int compteur = 0;
+	float ajout_score = 0.0f;
+	float* tableau_IOU = malloc(sizeof(float) * nb_it);
+	float* tableau_Moy = malloc(sizeof(float) * nb_it);
+
+	IMAGE imageTemp, imageTraitee;
+	for (int i = 0; i < nb_it; i++)
+	{
+		// Charger l'image
+		IMAGE image = lectureImage(imagePaths[i]);
+		IMAGE veriteTerrain = lectureImage(veriteTerrainPaths[i]);
+
+		// Traitement sur l'image
+		imageTraitee = whiteTopHatavecSE(image, se, 30);
+		imageTraitee = seuillageOtsu(imageTraitee);
+		imageTraitee = erosionImageavecSE(imageTraitee, se);
+		imageTraitee = erosionImageavecSE(imageTraitee, se);
+		imageTraitee = dilatationImageavecSE(imageTraitee, se);
+
+		// Calcul du score IOU
+		float IOU = IOU_score(imageTraitee, veriteTerrain);
+		tableau_IOU[i] = IOU;
+
+		// Accumulation des scores
+		ajout_score += IOU;
+		compteur++;
+
+		// Calcul de la moyenne et ajout au tableau
+		tableau_Moy[i] = ajout_score / compteur;
+	}
+
+	// Sauvegarde du tableau dans un fichier CSV
+	sauvegardeCSV(tableau_IOU, tableau_Moy, nb_it, "resultat.csv");
+
+	float* resultats = malloc(sizeof(float) * 2);
+	resultats[0] = tableau_IOU[nb_it - 1]; // Dernier IOU
+	resultats[1] = tableau_Moy[nb_it - 1]; // Moyenne finale
+
+	// N'oubliez pas de libérer la mémoire
+	free(tableau_IOU);
+	free(tableau_Moy);
+
+	return resultats;
+}
+#pragma endregion
 
 #pragma region Revision Eval 3
 IMAGE bruitAleatoireImage(IMAGE image, int amplitude) {
