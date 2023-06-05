@@ -92,7 +92,7 @@ int main()
         {
             imagePaths = malloc(sizeof(char*) * 300);
             veriteTerrainPaths = malloc(sizeof(char*) * 300);
-            
+
             if (strcmp(type, "In") == 0) 
             {
                 for (int i = 0; i < 300; i++) {
@@ -173,43 +173,43 @@ int main()
                 if (strcmp(element, "1") == 0)
                 {
                     strcpy(element, "disk");
-                    ELEMENT_STRUCTURANT se = allocation_ElementStructurant('disk', hauteur, largeur);
+                    se = allocation_ElementStructurant('disk', hauteur, largeur);
                     break;
                 }
                 else if (strcmp(element, "2") == 0)
                 {
                     strcpy(element, "rectangle");
-                    ELEMENT_STRUCTURANT se = allocation_ElementStructurant('rect', hauteur, largeur);
+                    se = allocation_ElementStructurant('rect', hauteur, largeur);
                     break;
                 }
                 else if (strcmp(element, "3") == 0)
                 {
                     strcpy(element, "ligne verticale");
-                    ELEMENT_STRUCTURANT se = allocation_ElementStructurant('ligV', hauteur, largeur);
+                    se = allocation_ElementStructurant('ligV', hauteur, largeur);
                     break;
                 }
                 else if (strcmp(element, "4") == 0)
                 {
                     strcpy(element, "ligne horizontale");
-                    ELEMENT_STRUCTURANT se = allocation_ElementStructurant('ligH', hauteur, largeur);
+                    se = allocation_ElementStructurant('ligH', hauteur, largeur);
                     break;
                 }
                 else if (strcmp(element, "5") == 0)
                 {
                     strcpy(element, "ellipse");
-                    ELEMENT_STRUCTURANT se = allocation_ElementStructurant('elli', hauteur, largeur);
+                    se = allocation_ElementStructurant('elli', hauteur, largeur);
                     break;
                 }
                 else if (strcmp(element, "6") == 0)
                 {
                     strcpy(element, "V4");
-                    ELEMENT_STRUCTURANT se = allocation_ElementStructurant('V4', hauteur, largeur);
+                    se = allocation_ElementStructurant('V4', hauteur, largeur);
                     break;
                 }
                 else if (strcmp(element, "7") == 0)
                 {
                     strcpy(element, "V8");
-                    ELEMENT_STRUCTURANT se = allocation_ElementStructurant('V8', hauteur, largeur);
+                    se = allocation_ElementStructurant('V8', hauteur, largeur);
                     break;
                 }
             }
