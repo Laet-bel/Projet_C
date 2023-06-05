@@ -114,6 +114,49 @@ int* LUTsansBord(SIGNATURE_COMPOSANTE_CONNEXE* signatures, int nbComp);
 IMAGE ImageAvecLUT(const IMAGE img, int* LUT);
 
 
+
+
+
+
+
+
+
+
+#pragma region Revision Eval 3
+IMAGE bruitAleatoireImage(IMAGE img, int amplitude);
+IMAGERGB masqueImage(IMAGE img, IMAGERGB masque);
+#pragma endregion
+
+#pragma region Eval2 
+POINT* imageVersPoints(IMAGE img, int* n, char axe);
+#pragma endregion
+
+#pragma region Regression 
+void regression(POINT* tab, int n, float* a, float* b);
+void sortieRegression(const char* nom, POINT* pts, int n);
+POINT* ImageVersPoints(IMAGE img, int* n, char axe);
+IMAGE imageSortieRegression(IMAGE img, char axe);
+POINT* GenerationAleatoirePointsDyn(int n, float min, float max);
+#pragma endregion
+
+#pragma region CSV export
+void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename);
+#pragma endregion
+
+#pragma region IOU
+float IOU_score(IMAGE traitee, IMAGE veritee);
+#pragma endregion
+
+#pragma region Filtre
+/// <summary>
+/// Fonction permettant de n'afficher que les blobs appartennant à l'image véritée
+/// </summary>
+/// <param name="image_verite">Image véritée</param>
+/// <param name="image_traitee">Image traitée</param>
+/// <returns></returns>
+IMAGE recuperation_blobs_communs(IMAGE image_verite, IMAGE image_traitee);
+#pragma endregion
+
 #pragma region morphologie
 /// <summary>
 /// Erosion
@@ -179,49 +222,9 @@ IMAGE blackTopHatavecSE(IMAGE img, ELEMENT_STRUCTURANT SE, int n_iteration);
 #pragma endregion
 
 #pragma region Element structurant
-ELEMENT_STRUCTURANT allocation_ElementStructurant(const char* type, int hauteur , int largeur);
+ELEMENT_STRUCTURANT allocation_ElementStructurant(const char* type, int hauteur, int largeur);
 ELEMENT_STRUCTURANT allocation_ElementStructurant_disk(const char* type, int rayon);
 ELEMENT_STRUCTURANT allocation_ElementStructurant_rect(const char* type, int hauteur, int largeur);
 ELEMENT_STRUCTURANT allocation_ElementStructurant_ellipse(const char* type, int hauteur, int largeur);
 void remplissageV4(unsigned char** pixel, int x, int y, int colcible, int colrep);
 #pragma endregion
-
-#pragma region Filtre
-/// <summary>
-/// Fonction permettant de n'afficher que les blobs appartennant à l'image véritée
-/// </summary>
-/// <param name="image_verite">Image véritée</param>
-/// <param name="image_traitee">Image traitée</param>
-/// <returns></returns>
-IMAGE recuperation_blobs_communs(IMAGE image_verite, IMAGE image_traitee);
-#pragma endregion
-
-
-#pragma region IOU
-float IOU_score(IMAGE traitee, IMAGE veritee);
-#pragma endregion
-
-
-
-#pragma region Revision Eval 3
-IMAGE bruitAleatoireImage(IMAGE img, int amplitude);
-IMAGERGB masqueImage(IMAGE img, IMAGERGB masque);
-#pragma endregion
-
-#pragma region Eval2 
-POINT* imageVersPoints(IMAGE img, int* n, char axe);
-#pragma endregion
-
-#pragma region Regression 
-void regression(POINT* tab, int n, float* a, float* b);
-void sortieRegression(const char* nom, POINT* pts, int n);
-POINT* ImageVersPoints(IMAGE img, int* n, char axe);
-IMAGE imageSortieRegression(IMAGE img, char axe);
-POINT* GenerationAleatoirePointsDyn(int n, float min, float max);
-#pragma endregion
-
-#pragma region CSV export
-void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename);
-#pragma endregion
-
-

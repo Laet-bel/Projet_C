@@ -1735,11 +1735,9 @@ IMAGE contourImage(IMAGE image, int voisinage)
 
 IMAGE whiteTopHat(IMAGE image, int voisinage, int n_iteration)
 {
-
 	IMAGE whiteTopHat = allocationImage(image.Nblig, image.Nbcol);
 	IMAGE imageTemp = allocationImage(image.Nblig, image.Nbcol);
-	imageTemp = erosionImage(image, voisinage);
-	for (int i = 0; i < n_iteration - 1; i++)
+	for (int i = 0; i < n_iteration; i++)
 	{
 		imageTemp = erosionImage(imageTemp, voisinage);
 	}
@@ -1774,8 +1772,7 @@ IMAGE whiteTopHatavecSE(IMAGE image, ELEMENT_STRUCTURANT SE, int n_iteration)
 
 	IMAGE whiteTopHat = allocationImage(image.Nblig, image.Nbcol);
 	IMAGE imageTemp = allocationImage(image.Nblig, image.Nbcol);
-	imageTemp = erosionImageavecSE(image, SE);
-	for (int i = 0; i < n_iteration - 1; i++)
+	for (int i = 0; i < n_iteration; i++)
 	{
 		imageTemp = erosionImageavecSE(imageTemp, SE);
 	}
@@ -1809,8 +1806,7 @@ IMAGE blackTopHat(IMAGE image, int voisinage, int n_iteration)
 {
 	IMAGE blackTopHat = allocationImage(image.Nblig, image.Nbcol);
 	IMAGE imageTemp = allocationImage(image.Nblig, image.Nbcol);
-	imageTemp = dilatationImage(image, voisinage);
-	for (int i = 0; i < n_iteration - 1; i++)
+	for (int i = 0; i < n_iteration; i++)
 	{
 		imageTemp = dilatationImage(imageTemp, voisinage);
 	}
@@ -1842,21 +1838,20 @@ IMAGE blackTopHat(IMAGE image, int voisinage, int n_iteration)
 IMAGE blackTopHatavecSE(IMAGE image, ELEMENT_STRUCTURANT SE, int n_iteration)
 {
 	IMAGE blackTopHat = allocationImage(image.Nblig, image.Nbcol);
-	IMAGE imageTemp = allocationImage(image.Nblig, image.Nbcol);
-	imageTemp = dilatationImageavecSE(image, SE);
-	for (int i = 0; i < n_iteration - 1; i++)
+	IMAGE image_intermediaire = allocationImage(image.Nblig, image.Nbcol);
+	for (int i = 0; i < n_iteration; i++)
 	{
-		imageTemp = dilatationImageavecSE(imageTemp, SE);
+		image_intermediaire = dilatationImageavecSE(image_intermediaire, SE);
 	}
 	for (int i = 0; i < n_iteration; i++)
 	{
-		imageTemp = erosionImageavecSE(imageTemp, SE);
+		image_intermediaire = erosionImageavecSE(image_intermediaire, SE);
 	}
 
 	int temp;
 	for (int i = 0; i < image.Nbcol * image.Nblig; i++)
 	{
-		temp = imageTemp.data[i] - image.data[i];
+		temp = image_intermediaire.data[i] - image.data[i];
 
 		if (temp < 0)
 		{
@@ -1891,7 +1886,6 @@ void remplissageV4(unsigned char** pixel, int x, int y, int colcible, int colrep
 
 ELEMENT_STRUCTURANT allocation_ElementStructurant(const char* type, int hauteur, int largeur)
 {
-
 	if (type == 'disk')
 	{
 		if (hauteur >= largeur) {
@@ -2070,41 +2064,23 @@ ELEMENT_STRUCTURANT allocation_ElementStructurant_ellipse(const char* type, int 
 	return ElementStructurant;
 }
 
-//float IOU_score(IMAGE traitee, IMAGE veritee) {
-//	
-//	for (int i = 0; i < traitee.Nblig; i++) {
-//		for (int j = 0; j < traitee.Nbcol; j++) {
-//			traitee.pixel[i][j] = 1;
-//		}
-//	}
-//
-//
-//	/*% 
-//	% Calcul de l'IoU
-//	intersection = sum(sum(Igt & BW));
-//	union = sum(sum(Igt | BW));
-//	IoU = intersection / union;
-//	*/
-//
-//}
-
 float IOU_score(IMAGE traitee, IMAGE veritee) {
-	int intersection = 0;  // variable pour stocker l'intersection
-	int union_area = 0;  // variable pour stocker l'union
+	int intersection = 0;
+	int union_area = 0;
 
-	// Parcours de chaque pixel
+	// Parcours de l'image pour compter tous les pixel de l'intersection et de l'union
 	for (int i = 0; i < traitee.Nblig; i++) {
 		for (int j = 0; j < traitee.Nbcol; j++) {
 			if (traitee.pixel[i][j] == 255 && veritee.pixel[i][j] == 255) {
-				intersection++;  // si le pixel est à la fois dans traitee et veritee, incrémenter l'intersection
+				intersection++;
 			}
 			if (traitee.pixel[i][j] == 255 || veritee.pixel[i][j] == 255) {
-				union_area++;  // si le pixel est soit dans traitee, soit dans veritee, incrémenter l'union
+				union_area++;
 			}
 		}
 	}
 
-	// Calcul du score IoU
+	// Calcul du score IoU (Intersection over Union)
 	float iou = (float)(intersection) / union_area;
 	return iou;
 }
