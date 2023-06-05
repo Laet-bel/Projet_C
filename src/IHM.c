@@ -126,7 +126,6 @@ int main()
                 for (int i = 0; i < 300; i++) {
                     imagePaths[i] = malloc(sizeof(char) * 100);
                     veriteTerrainPaths[i] = malloc(sizeof(char) * 100);
-
                     sprintf(imagePaths[i], "%s%s_%d.pgm", path, type, i + 1);
                     sprintf(veriteTerrainPaths[i], "%s%s_%d.pgm", pathVT, type, i + 1);
                 }
@@ -161,23 +160,43 @@ int main()
             }
             else
             {
-                strcat(path, type);
-                strcat(path, "_");
-                strcat(path, start);
-                strcat(path, ".pgm");
-                printf("\nVous avez choisi les images suivantes : \n");
-                printf("%s\n", path);
-                for (int i = atoi(start) + 1; i <= atoi(end); i++)
+                float* results = NULL;
+                int nbImages = atoi(end) - atoi(start) + 1;
+
+                imagePaths = malloc(sizeof(char*) * nbImages);
+                veriteTerrainPaths = malloc(sizeof(char*) * nbImages);
+
+                if (strcmp(type, "In") == 0)
                 {
-                    char str[5];
-                    sprintf(str, "%d", i);
-                    char temp[100];
-                    strcpy(temp, path);
-                    temp[strlen(temp) - strlen(start) - 4] = '\0';
-                    strcat(temp, str);
-                    strcat(temp, ".pgm");
-                    printf("%s\n", temp);
+                    for (int i = atoi(start); i <= atoi(end); i++)
+                    {
+                        imagePaths[i - atoi(start)] = malloc(sizeof(char) * 100);
+                        veriteTerrainPaths[i - atoi(start)] = malloc(sizeof(char) * 100);
+                        sprintf(imagePaths[i - atoi(start)], "%s%s_%d.pgm", path, type, i);
+                        sprintf(veriteTerrainPaths[i - atoi(start)], "%s%s_%d.pgm", pathVT, type, i);
+                    }
+                    results = Image_In(imagePaths, veriteTerrainPaths, se, nbImages);
                 }
+                else if (strcmp(type, "Sc") == 0)
+                {
+                    for (int i = atoi(start); i <= atoi(end); i++)
+                    {
+                        imagePaths[i - atoi(start)] = malloc(sizeof(char) * 100);
+                        veriteTerrainPaths[i - atoi(start)] = malloc(sizeof(char) * 100);
+                        sprintf(imagePaths[i - atoi(start)], "%s%s_%d.pgm", path, type, i);
+                        sprintf(veriteTerrainPaths[i - atoi(start)], "%s%s_%d.pgm", pathVT, type, i);
+                    }
+                    results = Image_Sc(imagePaths, veriteTerrainPaths, se, nbImages);
+                }
+
+                printf("Resultats :\n");
+                for (int i = 0; i < nbImages; i++)
+                {
+                    printf("Image %d :\n", i + atoi(start));
+                    printf("Score IOU : %f\n", results[0]);
+                }
+                printf("Moyenne : %f\n", results[1]);
+                free(results);
                 break;
             }
         }
