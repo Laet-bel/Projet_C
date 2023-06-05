@@ -2234,7 +2234,7 @@ IMAGE recuperation_blobs_communs(IMAGE image_verite, IMAGE image_traitee)
 	SIGNATURE_COMPOSANTE_CONNEXE* blobs_traitee = signaturesImage(labelise_image_traitee, nb_blobs_traitee);
 
 	//Création d'une LUT pou déterminers quels blobs deviendrons 0 ou 255
-	int* LUT = (int*)calloc(255, sizeof(int));
+	int* LUT = (int*)calloc(256, sizeof(int));
 
 	//Parcour de l'image véritée
 	for (int i = 0; i < image_verite.Nblig; i++)
@@ -2248,11 +2248,16 @@ IMAGE recuperation_blobs_communs(IMAGE image_verite, IMAGE image_traitee)
 				{
 					if (i == (int)blobs_traitee[nb].CG.y && j == (int)blobs_traitee[nb].CG.x)
 					{
-						LUT[image_traitee.pixel[i][j]] = 0;
+						LUT[nb] = 255;
 					}
 				}
 			}
 		}
+	}
+
+	for (int k = 0; k < 256; k++)
+	{
+		printf("%d ", LUT[k]);
 	}
 
 	// J'applique ma LUT pour ne garder que les blobs appartenant à mon image véritée. 
