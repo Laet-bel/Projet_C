@@ -28,6 +28,7 @@ int main()
     ELEMENT_STRUCTURANT se;
     char** imagePaths;
     char** veriteTerrainPaths;
+    float* results = NULL;
 
     while (1)
     {
@@ -91,7 +92,7 @@ int main()
         {
             imagePaths = malloc(sizeof(char*) * 300);
             veriteTerrainPaths = malloc(sizeof(char*) * 300);
-
+            
             if (strcmp(type, "In") == 0) 
             {
                 for (int i = 0; i < 300; i++) {
@@ -109,7 +110,6 @@ int main()
                 {
                     imagePaths[i] = malloc(sizeof(char) * 100);
                     veriteTerrainPaths[i] = malloc(sizeof(char) * 100);
-
                     sprintf(imagePaths[i], "%s%s_%d.pgm", path, type, i + 1);
                     sprintf(veriteTerrainPaths[i], "%s%s_%d.pgm", pathVT, type, i + 1);
                 }
@@ -118,8 +118,6 @@ int main()
             printf("Résultats :\n");
             printf("Score IOU : %f\n", results[0]);
             printf("Moyenne : %f\n", results[1]);
-
-            // Libération de la mémoire
             free(results);
             break;
         }
