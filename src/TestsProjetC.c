@@ -163,3 +163,8 @@
 //
 //	return 0;
 //}
+	IMAGE image_avec_blobs_communs = recuperation_blobs_communs(true_SE, WTH_SE);
+	sauvegardeImage(image_avec_blobs_communs, "P5", "In_30_blobs_communs.pgm");
+	float IOU = IOU_score(WTH_SE, true_SE);
+	float IOU2 = IOU_score(image_avec_blobs_communs, true_SE);
+	printf("IOU : %f \t IOU2 : %f", IOU , IOU2);

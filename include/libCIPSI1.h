@@ -186,6 +186,17 @@ ELEMENT_STRUCTURANT allocation_ElementStructurant_ellipse(const char* type, int 
 void remplissageV4(unsigned char** pixel, int x, int y, int colcible, int colrep);
 #pragma endregion
 
+#pragma region Filtre
+/// <summary>
+/// Fonction permettant de n'afficher que les blobs appartennant à l'image véritée
+/// </summary>
+/// <param name="image_verite">Image véritée</param>
+/// <param name="image_traitee">Image traitée</param>
+/// <returns></returns>
+IMAGE recuperation_blobs_communs(IMAGE image_verite, IMAGE image_traitee);
+#pragma endregion
+
+
 #pragma region IOU
 float IOU_score(IMAGE traitee, IMAGE veritee);
 #pragma endregion

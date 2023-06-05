@@ -1602,7 +1602,7 @@ int min_SE(IMAGE img, ELEMENT_STRUCTURANT SE, int* i, int* j)
 { //TODO remettre mes nom variables  
 	int value = 255;
 	int cmpt_x = 0, cmpt_y = 0;
-	
+
 	for (int y = -SE.hauteur / 2.0; y < SE.hauteur / 2.0; y++)
 	{
 
@@ -2110,6 +2110,51 @@ float IOU_score(IMAGE traitee, IMAGE veritee) {
 }
 
 #pragma endregion
+
+#pragma region Filtre
+//Trier les blobs qui n'appartiennent pas à l'image de véritée
+IMAGE recuperation_blobs_communs(IMAGE image_verite, IMAGE image_traitee)
+{
+	//Labélisation des images vérité et traitée
+	int nb_blobs_traitee;
+	IMAGE labelise_image_traitee = labelImage(image_traitee, &nb_blobs_traitee);
+
+	//Récupération des caractéristiques de la composante connexe de l'image traitee
+	SIGNATURE_COMPOSANTE_CONNEXE* blobs_traitee = signaturesImage(labelise_image_traitee, nb_blobs_traitee);
+
+	//Création d'une LUT pou déterminers quels blobs deviendrons 0 ou 255
+	int* LUT = (int*)calloc(256, sizeof(int));
+
+	//Parcour de l'image véritée
+	for (int i = 0; i < image_verite.Nblig; i++)
+	{
+		for (int j = 0; j < image_verite.Nbcol; j++)
+		{
+			//Pour chaque pixel > 0 on teste si un blob de l'image traitée appartient à un blob de l'image véritée
+			if (image_verite.pixel[i][j] > 0)
+			{
+				for (int nb = 0; nb < nb_blobs_traitee; nb++)
+				{
+					if (i == (int)blobs_traitee[nb].CG.y && j == (int)blobs_traitee[nb].CG.x)
+					{
+						LUT[nb] = 255;
+					}
+				}
+			}
+		}
+	}
+
+	for (int k = 0; k < 256; k++)
+	{
+		printf("%d ", LUT[k]);
+	}
+
+	// J'applique ma LUT pour ne garder que les blobs appartenant à mon image véritée. 
+	IMAGE traitee_finale = ImageAvecLUT(labelise_image_traitee, LUT);
+	return traitee_finale;
+}
+#pragma endregion
+
 
 #pragma region Revision Eval 3
 IMAGE bruitAleatoireImage(IMAGE image, int amplitude) {
