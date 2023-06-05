@@ -187,10 +187,11 @@ void remplissageV4(unsigned char** pixel, int x, int y, int colcible, int colrep
 #pragma endregion
 
 #pragma region Filtre
-IMAGE recuperation_blobs_communs(IMAGE image_verite, IMAGE image_traitee, int largeur, int hauteur, SIGNATURE_COMPOSANTE_CONNEXE* blobs_verite, int nb_blobs_verite, SIGNATURE_COMPOSANTE_CONNEXE** blobs_communs, int* nb_blobs_communs);
-int* recuperation_blobs_communs2(int* image_verite, int* image_traitee, int largeur, int hauteur, SIGNATURE_COMPOSANTE_CONNEXE* blobs_verite, int nb_blobs_verite);
-int* recuperation_blobs_communs3(int* image_verite, int* image_traitee, int largeur, int hauteur, SIGNATURE_COMPOSANTE_CONNEXE* blobs_verite, int nb_blobs_verite);
-IMAGE recuperation_blobs_communs4(IMAGE image_verite, IMAGE image_traitee, int largeur, int hauteur, SIGNATURE_COMPOSANTE_CONNEXE* blobs_verite, int nb_blobs_verite);
+IMAGE recuperation_blobs_communs(IMAGE image_verite, IMAGE image_traitee);
+//IMAGE recuperation_blobs_communs(IMAGE image_verite, IMAGE image_traitee, int largeur, int hauteur, SIGNATURE_COMPOSANTE_CONNEXE* blobs_verite, int nb_blobs_verite, SIGNATURE_COMPOSANTE_CONNEXE** blobs_communs, int* nb_blobs_communs);
+//int* recuperation_blobs_communs2(int* image_verite, int* image_traitee, int largeur, int hauteur, SIGNATURE_COMPOSANTE_CONNEXE* blobs_verite, int nb_blobs_verite);
+//int* recuperation_blobs_communs3(int* image_verite, int* image_traitee, int largeur, int hauteur, SIGNATURE_COMPOSANTE_CONNEXE* blobs_verite, int nb_blobs_verite);
+//IMAGE recuperation_blobs_communs4(IMAGE image_verite, IMAGE image_traitee, int largeur, int hauteur, SIGNATURE_COMPOSANTE_CONNEXE* blobs_verite, int nb_blobs_verite);
 #pragma endregion
 
 
