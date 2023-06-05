@@ -40,8 +40,8 @@ typedef struct signature_composantes_connexes {
 	float perimetre;
 	float compacite;
 	int bord;
-	POINT CG; /* pour le centre de gravité, cf libOutils */
-	float rayon; /* rayon moyen calculé via la surface */
+	POINT CG; /* pour le centre de gravitï¿½, cf libOutils */
+	float rayon; /* rayon moyen calculï¿½ via la surface */
 } SIGNATURE_COMPOSANTE_CONNEXE;
 
 typedef struct
@@ -149,10 +149,10 @@ float IOU_score(IMAGE traitee, IMAGE veritee);
 
 #pragma region Filtre
 /// <summary>
-/// Fonction permettant de n'afficher que les blobs appartennant à l'image véritée
+/// Fonction permettant de n'afficher que les blobs appartennant ï¿½ l'image vï¿½ritï¿½e
 /// </summary>
-/// <param name="image_verite">Image véritée</param>
-/// <param name="image_traitee">Image traitée</param>
+/// <param name="image_verite">Image vï¿½ritï¿½e</param>
+/// <param name="image_traitee">Image traitï¿½e</param>
 /// <returns></returns>
 IMAGE recuperation_blobs_communs(IMAGE image_verite, IMAGE image_traitee);
 #pragma endregion
@@ -228,3 +228,37 @@ ELEMENT_STRUCTURANT allocation_ElementStructurant_rect(const char* type, int hau
 ELEMENT_STRUCTURANT allocation_ElementStructurant_ellipse(const char* type, int hauteur, int largeur);
 void remplissageV4(unsigned char** pixel, int x, int y, int colcible, int colrep);
 #pragma endregion
+
+#pragma region IOU
+float IOU_score(IMAGE traitee, IMAGE veritee);
+#pragma endregion
+
+#pragma region Filtres
+
+IMAGE filtrageMedian(IMAGE img, int N);
+
+#pragma endregion
+
+#pragma region Fonction Image
+void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename);
+float* Image_In(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURANT se, int nb_it);
+float* Image_Sc(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURANT se, int nb_it);
+#pragma endregion
+
+#pragma region Revision Eval 3
+IMAGE bruitAleatoireImage(IMAGE img, int amplitude);
+IMAGERGB masqueImage(IMAGE img, IMAGERGB masque);
+#pragma endregion
+
+#pragma region Eval2 
+POINT* imageVersPoints(IMAGE img, int* n, char axe);
+#pragma endregion
+
+#pragma region Regression 
+void regression(POINT* tab, int n, float* a, float* b);
+void sortieRegression(const char* nom, POINT* pts, int n);
+POINT* ImageVersPoints(IMAGE img, int* n, char axe);
+IMAGE imageSortieRegression(IMAGE img, char axe);
+POINT* GenerationAleatoirePointsDyn(int n, float min, float max);
+#pragma endregion
+
