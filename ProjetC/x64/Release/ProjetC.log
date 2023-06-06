@@ -1,32 +1,42 @@
-﻿  IHM.c
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(91,64): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(91,60): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(106,64): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(106,60): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(132,60): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(132,56): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(149,60): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(149,56): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(186,64): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(186,60): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(203,64): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(203,60): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(230,62): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(230,56): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(236,62): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(236,56): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(242,62): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(242,56): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(248,62): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(248,56): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(254,60): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(254,56): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(260,60): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(260,56): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(11,9): warning C4101: 'choice' : variable locale non référencée
+﻿  libCIPSI1.c
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(27,15): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(758,21): warning C4244: '=' : conversion de 'double' en 'int', perte possible de données
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(794,21): warning C4244: '=' : conversion de 'double' en 'int', perte possible de données
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1183,16): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1185,54): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1243,10): warning C4477: 'printf' : la chaîne de format '%d' nécessite un argument de type 'int', mais l'argument variadique 1 est de type 'double'
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1244,10): warning C4477: 'printf' : la chaîne de format '%d' nécessite un argument de type 'int', mais l'argument variadique 1 est de type 'double'
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1324,20): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1325,20): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1343,20): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1344,20): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1432,16): warning C4047: '==' : les niveaux d'indirection de 'int' et de 'char [2]' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1459,16): warning C4047: '==' : les niveaux d'indirection de 'int' et de 'char [2]' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1436,21): warning C4244: 'initialisation' : conversion de 'int' en 'float', perte possible de données
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1436,25): warning C4244: 'initialisation' : conversion de 'int' en 'float', perte possible de données
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1447,21): warning C4244: 'initialisation' : conversion de 'int' en 'float', perte possible de données
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1447,25): warning C4244: 'initialisation' : conversion de 'int' en 'float', perte possible de données
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1678,27): warning C4244: 'initialisation' : conversion de 'double' en 'int', perte possible de données
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1681,28): warning C4244: 'initialisation' : conversion de 'double' en 'int', perte possible de données
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1725,27): warning C4244: 'initialisation' : conversion de 'double' en 'int', perte possible de données
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1728,28): warning C4244: 'initialisation' : conversion de 'double' en 'int', perte possible de données
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1768,8): warning C4101: 'imageDilate' : variable locale non référencée
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1777,8): warning C4101: 'imageDilate' : variable locale non référencée
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1954,20): warning C4047: '==' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1963,20): warning C4047: '==' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1966,20): warning C4047: '==' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1969,20): warning C4047: '==' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1972,20): warning C4047: '==' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1975,18): warning C4047: '==' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1978,18): warning C4047: '==' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1982,2): warning C4033: 'allocation_ElementStructurant' doit retourner une valeur
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1987,32): warning C4090: '=' : qualificateurs 'const' différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(2020,32): warning C4090: '=' : qualificateurs 'const' différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(2046,13): warning C4244: '=' : conversion de 'double' en 'int', perte possible de données
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(2104,8): warning C4101: 'imageTemp' : variable locale non référencée
   Génération de code en cours
-  Previous IOBJ not found, fall back to full compilation.
-C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1983): warning C4715: 'allocation_ElementStructurant' : les chemins de contrôle ne retournent pas tous une valeur
-  All 35 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  7 of 36 functions (19.4%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    2 functions had inline decision re-evaluated but remain unchanged
   Fin de la génération du code
   ProjetC.vcxproj -> C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\ProjetC\x64\Release\ProjetC.exe

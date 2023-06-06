@@ -17,7 +17,6 @@ int main()
     char** imagePaths;
     char** veriteTerrainPaths;
     float results = 0.0;
-    int useDefaultSE = 1;
 
     while (1)
     {
@@ -83,13 +82,8 @@ int main()
                     imagePaths[0] = malloc(sizeof(char) * 100);
                     veriteTerrainPaths[0] = malloc(sizeof(char) * 100);
 
-                    sprintf(imagePaths[0], "%s_%d", path, atoi(start));
-                    sprintf(veriteTerrainPaths[0], "%s_%d", pathVT, atoi(start));
-
-                    if (useDefaultSE) {
-                        strcpy(element, "V4");
-                        se = allocation_ElementStructurant('V4', 3, 3);
-                    }
+                    sprintf(imagePaths[0], "%s", path);
+                    sprintf(veriteTerrainPaths[0], "%s%s_%d.pgm", pathVT, type, atoi(start));
 
                     results = Image_In(imagePaths, veriteTerrainPaths, se, 1);
                 }
@@ -98,13 +92,8 @@ int main()
                     imagePaths[0] = malloc(sizeof(char) * 100);
                     veriteTerrainPaths[0] = malloc(sizeof(char) * 100);
 
-                    sprintf(imagePaths[0], "%s_%d", path, atoi(start));
-                    sprintf(veriteTerrainPaths[0], "%s_%d", pathVT, atoi(start));
-
-                    if (useDefaultSE) {
-                        strcpy(element, "V4");
-                        se = allocation_ElementStructurant('V4', 3, 3);
-                    }
+                    sprintf(imagePaths[0], "%s", path);
+                    sprintf(veriteTerrainPaths[0], "%s%s_%d.pgm", pathVT, type, atoi(start));
 
                     results = Image_Sc(imagePaths, veriteTerrainPaths, se, 1);
                 }
@@ -127,11 +116,6 @@ int main()
                     sprintf(veriteTerrainPaths[i], "%s%s_%d.pgm", pathVT, type, i + 1);
                 }
 
-                if (useDefaultSE) {
-                    strcpy(element, "V4");
-                    se = allocation_ElementStructurant('V4', 3, 3);
-                }
-
                 results = Image_In(imagePaths, veriteTerrainPaths, se, 300);
             }
             else if (strcmp(type, "Sc") == 0)
@@ -142,11 +126,6 @@ int main()
                     veriteTerrainPaths[i] = malloc(sizeof(char) * 100);
                     sprintf(imagePaths[i], "%s%s_%d.pgm", path, type, i + 1);
                     sprintf(veriteTerrainPaths[i], "%s%s_%d.pgm", pathVT, type, i + 1);
-                }
-
-                if (useDefaultSE) {
-                    strcpy(element, "V4");
-                    se = allocation_ElementStructurant('V4', 3, 3);
                 }
 
                 results = Image_Sc(imagePaths, veriteTerrainPaths, se, 300);
@@ -181,11 +160,6 @@ int main()
                         sprintf(veriteTerrainPaths[i - atoi(start)], "%s%s_%d.pgm", pathVT, type, i);
                     }
 
-                    if (useDefaultSE) {
-                        strcpy(element, "V4");
-                        se = allocation_ElementStructurant('V4', 3, 3);
-                    }
-
                     results = Image_In(imagePaths, veriteTerrainPaths, se, nbImages);
                 }
                 else if (strcmp(type, "Sc") == 0)
@@ -198,10 +172,6 @@ int main()
                         sprintf(veriteTerrainPaths[i - atoi(start)], "%s%s_%d.pgm", pathVT, type, i);
                     }
 
-                    if (useDefaultSE) {
-                        strcpy(element, "V4");
-                        se = allocation_ElementStructurant('V4', 3, 3);
-                    }
                     results = Image_Sc(imagePaths, veriteTerrainPaths, se, nbImages);
                 }
                 printf("IOU: %f\n", results);
@@ -209,10 +179,8 @@ int main()
         }
         else if (strcmp(input, "p") == 0 || strcmp(input, "P") == 0)
         {
-            useDefaultSE = 0;
             while (1)
             {
-                int rayon = 3;
                 int hauteur = 3;
                 int largeur = 3;
                 printf("\nChoix de l'element structurant :\n");

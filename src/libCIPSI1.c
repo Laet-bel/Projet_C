@@ -2130,13 +2130,15 @@ float Image_In(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURANT
 	}
 
 	// Sauvegarde du tableau dans un fichier CSV
-	sauvegardeCSV(tableau_IOU, tableau_Moy, nb_it, "resultats.csv");
+	sauvegardeCSV(tableau_IOU, tableau_Moy, nb_it, "res\\resultats.csv");
+
+	float moyenne_finale = tableau_Moy[nb_it - 1];
 
 	// Libération de la mémoire
 	free(tableau_IOU);
 	free(tableau_Moy);
 
-	return tableau_Moy[nb_it - 1];
+	return moyenne_finale;
 }
 
 float Image_Sc(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURANT se, int nb_it)
