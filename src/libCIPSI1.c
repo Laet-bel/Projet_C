@@ -1,4 +1,3 @@
-#pragma once
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -259,10 +258,13 @@ IMAGE lectureImage(const char* in)
 				fscanf(F, "%c", &buf);
 			}
 
+#ifndef NDEBUG
 			/* d�but des data */
-
 			printf("Lecture image NG type %s avec %d lignes et %d colonnes...\n", type, image.Nblig, image.Nbcol);
 
+#endif // DEBUG
+
+			
 			/* taille connue, allocation dynamique possible */
 			image = allocationImage(image.Nblig, image.Nbcol);
 
@@ -326,11 +328,11 @@ IMAGE lectureImage(const char* in)
 					dynamique = dynamique * 10 + (buf - '0');
 					buf = fgetc(F);
 				}
-
+#ifndef NDEBUG
 				/* d�but des data */
 
 				printf("Lecture image NG type %s avec %d lignes et %d colonnes...\n", type, image.Nblig, image.Nbcol);
-
+#endif
 				/* taille connue, allocation dynamique possible */
 				image = allocationImage(image.Nblig, image.Nbcol);
 
@@ -1395,6 +1397,79 @@ IMAGE imageSortieRegression(IMAGE img, char axe)
 }
 #pragma endregion
 
+#pragma region Revision Eval 3
+IMAGE bruitAleatoireImage(IMAGE image, int amplitude) {
+	IMAGE bruit = image;
+	int valMin = (-1) * amplitude;
+
+	for (int i = 0; i < (image.Nbcol * image.Nblig); i++) {
+		int temp = bruit.data[i] + (valMin + rand() % (amplitude + 1 - valMin));
+		if (temp < 0) temp = 0;
+		if (temp > 255) temp = 255;
+		bruit.data[i] = temp;
+	}
+	return image;
+}
+
+IMAGERGB masqueImage(IMAGE image, IMAGERGB masque) {
+	IMAGERGB rgb = allocationImageRGB(image.Nblig, image.Nbcol);
+	for (int i = 0; i < (masque.Nbcol * masque.Nblig); i++) {
+		if (masque.data[i].B == 0 && masque.data[i].G == 0 && masque.data[i].R == 0) {
+			rgb.data[i].B = image.data[i];
+			rgb.data[i].G = image.data[i];
+			rgb.data[i].R = image.data[i];
+		}
+		else {
+			rgb.data[i] = masque.data[i];
+		}
+	}
+	return rgb;
+}
+#pragma endregion
+
+#pragma region Eval2 
+POINT* imageVersPoints(IMAGE image, int* n, char axe) {
+	int indice = 0;
+
+	POINT* tab = (POINT*)calloc((image.Nbcol * image.Nblig), sizeof(POINT));
+	if (axe == "x") {// Fixe le x � i et le y � j
+		for (int j = 0; j < image.Nbcol; j++) {
+			for (int i = 0; i < image.Nblig; i++) {
+				if (image.pixel[i][j] != 0) {
+					POINT temp = { i , j };
+					tab[indice] = temp;
+					indice++;
+				}
+			}
+		}
+	}
+	else { // Fixe le x � j et le y � i 
+		for (int j = 0; j < image.Nbcol; j++) {
+			for (int i = 0; i < image.Nblig; i++) {
+				if (image.pixel[i][j] != 0) {
+					POINT temp = { j , i };
+					tab[indice] = temp;
+					indice++;
+				}
+			}
+		}
+	}
+
+	*n = indice;
+	tab = (POINT*)realloc(&tab, *n * sizeof(POINT)); //Ne fonctionne pas
+
+
+	if (axe == "x") {
+		sortieRegression("AxeX.csv", tab, indice);
+	}
+	else {
+		sortieRegression("AxeY.csv", tab, indice);
+	}
+	return tab;
+}
+
+#pragma endregion
+
 #pragma region Morphologie
 
 IMAGE erosionImage(IMAGE image, int voisinage)
@@ -1736,21 +1811,23 @@ IMAGE contourImage(IMAGE image, int voisinage)
 IMAGE whiteTopHat(IMAGE image, int voisinage, int n_iteration)
 {
 	IMAGE whiteTopHat = allocationImage(image.Nblig, image.Nbcol);
-	IMAGE imageTemp = allocationImage(image.Nblig, image.Nbcol);
-	for (int i = 0; i < n_iteration; i++)
+	IMAGE temp_image = allocationImage(image.Nblig, image.Nbcol);
+
+	temp_image = erosionImage(image, voisinage);
+	for (int i = 0; i < n_iteration - 1; i++)
 	{
-		imageTemp = erosionImage(imageTemp, voisinage);
+		temp_image = erosionImage(temp_image, voisinage);
 	}
 	for (int i = 0; i < n_iteration; i++)
 	{
-		imageTemp = dilatationImage(imageTemp, voisinage);
+		temp_image = dilatationImage(temp_image, voisinage);
 	}
 
 
 	int temp;
 	for (int i = 0; i < image.Nbcol * image.Nblig; i++)
 	{
-		temp = image.data[i] - imageTemp.data[i];
+		temp = image.data[i] - temp_image.data[i];
 
 		if (temp < 0)
 		{
@@ -1767,25 +1844,26 @@ IMAGE whiteTopHat(IMAGE image, int voisinage, int n_iteration)
 	return whiteTopHat;
 }
 
+
 IMAGE whiteTopHatavecSE(IMAGE image, ELEMENT_STRUCTURANT SE, int n_iteration)
 {
-
 	IMAGE whiteTopHat = allocationImage(image.Nblig, image.Nbcol);
-	IMAGE imageTemp = allocationImage(image.Nblig, image.Nbcol);
-	for (int i = 0; i < n_iteration; i++)
-	{
-		imageTemp = erosionImageavecSE(imageTemp, SE);
-	}
-	for (int i = 0; i < n_iteration; i++)
-	{
-		imageTemp = dilatationImageavecSE(imageTemp, SE);
-	}
+	IMAGE temp_image = allocationImage(image.Nblig, image.Nbcol);
 
+	temp_image = erosionImageavecSE(image, SE);
+	for (int i = 0; i < n_iteration - 1; i++)
+	{
+		temp_image = erosionImageavecSE(temp_image, SE);
+	}
+	for (int i = 0; i < n_iteration; i++)
+	{
+		temp_image = dilatationImageavecSE(temp_image, SE);
+	}
 
 	int temp;
 	for (int i = 0; i < image.Nbcol * image.Nblig; i++)
 	{
-		temp = image.data[i] - imageTemp.data[i];
+		temp = image.data[i] - temp_image.data[i];
 
 		if (temp < 0)
 		{
@@ -1805,20 +1883,22 @@ IMAGE whiteTopHatavecSE(IMAGE image, ELEMENT_STRUCTURANT SE, int n_iteration)
 IMAGE blackTopHat(IMAGE image, int voisinage, int n_iteration)
 {
 	IMAGE blackTopHat = allocationImage(image.Nblig, image.Nbcol);
-	IMAGE imageTemp = allocationImage(image.Nblig, image.Nbcol);
-	for (int i = 0; i < n_iteration; i++)
+	IMAGE temp_image = allocationImage(image.Nblig, image.Nbcol);
+
+	temp_image = erosionImage(image, voisinage);
+	for (int i = 0; i < n_iteration - 1; i++)
 	{
-		imageTemp = dilatationImage(imageTemp, voisinage);
+		temp_image = dilatationImage(temp_image, voisinage);
 	}
 	for (int i = 0; i < n_iteration; i++)
 	{
-		imageTemp = erosionImage(imageTemp, voisinage);
+		temp_image = erosionImage(temp_image, voisinage);
 	}
 
 	int temp;
 	for (int i = 0; i < image.Nbcol * image.Nblig; i++)
 	{
-		temp = imageTemp.data[i] - image.data[i];
+		temp = temp_image.data[i] - image.data[i];
 
 		if (temp < 0)
 		{
@@ -1838,20 +1918,22 @@ IMAGE blackTopHat(IMAGE image, int voisinage, int n_iteration)
 IMAGE blackTopHatavecSE(IMAGE image, ELEMENT_STRUCTURANT SE, int n_iteration)
 {
 	IMAGE blackTopHat = allocationImage(image.Nblig, image.Nbcol);
-	IMAGE image_intermediaire = allocationImage(image.Nblig, image.Nbcol);
-	for (int i = 0; i < n_iteration; i++)
+	IMAGE temp_image = allocationImage(image.Nblig, image.Nbcol);
+
+	temp_image = erosionImageavecSE(image, SE);
+	for (int i = 0; i < n_iteration - 1; i++)
 	{
-		image_intermediaire = dilatationImageavecSE(image_intermediaire, SE);
+		temp_image = dilatationImageavecSE(temp_image, SE);
 	}
 	for (int i = 0; i < n_iteration; i++)
 	{
-		image_intermediaire = erosionImageavecSE(image_intermediaire, SE);
+		temp_image = erosionImageavecSE(temp_image, SE);
 	}
 
 	int temp;
 	for (int i = 0; i < image.Nbcol * image.Nblig; i++)
 	{
-		temp = image_intermediaire.data[i] - image.data[i];
+		temp = temp_image.data[i] - image.data[i];
 
 		if (temp < 0)
 		{
@@ -1870,29 +1952,15 @@ IMAGE blackTopHatavecSE(IMAGE image, ELEMENT_STRUCTURANT SE, int n_iteration)
 #pragma endregion
 
 #pragma region Element Structurant
-
-void remplissageV4(unsigned char** pixel, int x, int y, int colcible, int colrep)
-{
-	if (pixel[x][y] == colcible)
-	{
-		pixel[x][y] = colrep;
-
-		remplissageV4(pixel, x - 1, y, colcible, colrep);
-		remplissageV4(pixel, x + 1, y, colcible, colrep);
-		remplissageV4(pixel, x, y + 1, colcible, colrep);
-		remplissageV4(pixel, x, y - 1, colcible, colrep);
-	}
-}
-
 ELEMENT_STRUCTURANT allocation_ElementStructurant(const char* type, int hauteur, int largeur)
 {
 	if (type == 'disk')
 	{
 		if (hauteur >= largeur) {
-			return allocation_ElementStructurant_disk(type, hauteur);
+			return allocation_ElementStructurant_ellipse(type, hauteur , hauteur);
 		}
 		else {
-			return allocation_ElementStructurant_disk(type, largeur);
+			return allocation_ElementStructurant_ellipse(type, largeur , largeur);
 		}
 	}
 	if (type == 'rect') {
@@ -1915,68 +1983,6 @@ ELEMENT_STRUCTURANT allocation_ElementStructurant(const char* type, int hauteur,
 	}
 
 	return;
-}
-
-ELEMENT_STRUCTURANT allocation_ElementStructurant_disk(const char* type, int rayon) {
-	ELEMENT_STRUCTURANT ElementStructurant;
-	ElementStructurant.type = type;
-	ElementStructurant.hauteur = rayon * 2;
-	ElementStructurant.largeur = rayon * 2;
-
-	int centreSE;
-	int tailleSE;
-	int i;
-
-	tailleSE = pow((2 * rayon) + 1, 2);
-	ElementStructurant.data = (unsigned char*)calloc(tailleSE, sizeof(unsigned char));
-	if (ElementStructurant.data == NULL)
-	{
-		return(ElementStructurant);
-	}
-	ElementStructurant.pixel = (unsigned char**)malloc(((2 * rayon) + 1) * sizeof(unsigned char*));
-	if (ElementStructurant.pixel == NULL) {
-		free(ElementStructurant.data);
-		ElementStructurant.data = NULL;
-		return(ElementStructurant);
-	}
-
-	for (i = 0; i < ((2 * rayon) + 1); i++)
-	{
-		ElementStructurant.pixel[i] = &ElementStructurant.data[i * ((2 * rayon) + 1)];
-	}
-
-	centreSE = floor((tailleSE) / 2.0);
-	int centerX = rayon;
-	int centerY = rayon;
-
-	int x = 0;
-	int y = rayon;
-	int m = 5 - 4 * rayon;
-
-	while (x <= y)
-	{
-		ElementStructurant.pixel[centerX + x][centerY + y] = 1;
-		ElementStructurant.pixel[centerX + x][centerY - y] = 1;
-		ElementStructurant.pixel[centerX - x][centerY + y] = 1;
-		ElementStructurant.pixel[centerX - x][centerY - y] = 1;
-		ElementStructurant.pixel[centerX + y][centerY + x] = 1;
-		ElementStructurant.pixel[centerX + y][centerY - x] = 1;
-		ElementStructurant.pixel[centerX - y][centerY + x] = 1;
-		ElementStructurant.pixel[centerX - y][centerY - x] = 1;
-
-		if (m > 0)
-		{
-			y--;
-			m -= 8 * y;
-		}
-
-		x++;
-
-		m += 8 * x + 4;
-	}
-
-	remplissageV4(ElementStructurant.pixel, rayon, rayon, 0, 1);
-	return ElementStructurant;
 }
 
 ELEMENT_STRUCTURANT allocation_ElementStructurant_rect(const char* type, int hauteur, int largeur) {
@@ -2063,24 +2069,6 @@ ELEMENT_STRUCTURANT allocation_ElementStructurant_ellipse(const char* type, int 
 	}
 	return ElementStructurant;
 }
-
-//float IOU_score(IMAGE traitee, IMAGE veritee) {
-//	
-//	for (int i = 0; i < traitee.Nblig; i++) {
-//		for (int j = 0; j < traitee.Nbcol; j++) {
-//			traitee.pixel[i][j] = 1;
-//		}
-//	}
-//
-//
-//	/*% 
-//	% Calcul de l'IoU
-//	intersection = sum(sum(Igt & BW));
-//	union = sum(sum(Igt | BW));
-//	IoU = intersection / union;
-//	*/
-//
-//}
 #pragma endregion
 
 #pragma region IOU
@@ -2108,73 +2096,14 @@ float IOU_score(IMAGE traitee, IMAGE veritee) {
 #pragma endregion
 
 
-#pragma region Filtres
-IMAGE filtrageMedian(IMAGE img, int N)
-{
-	// Lexique local
-	IMAGE img_median = allocationImage(img.Nblig, img.Nbcol);
-	int cmpt_value = 0;
-	unsigned char* valeurs = (unsigned char)malloc(N * sizeof(unsigned char));
-
-	// Algorithme local
-	for (int i = 0; i < img.Nblig; i++) {
-		for (int j = 0; j < img.Nbcol; j++) {
-			// Collecte des valeurs
-			cmpt_value = 0;
-			for (int y = -N / 2; y <= N / 2; y++) {
-				for (int x = -N / 2; x <= N / 2; x++) {
-					if ((i + y >= 0) && (j + x >= 0) && (i + y < img.Nblig) && (j + x < img.Nbcol)) {
-						valeurs[cmpt_value++] = img.pixel[i + y][j + x];
-					}
-				}
-			}
-
-			// Tri des valeurs
-			for (int k = 0; k < cmpt_value - 1; k++) {
-				for (int l = 0; l < cmpt_value - k - 1; l++) {
-					if (valeurs[l] > valeurs[l + 1]) {
-						unsigned char temp = valeurs[l];
-						valeurs[l] = valeurs[l + 1];
-						valeurs[l + 1] = temp;
-					}
-				}
-			}
-
-			// Valeur m�diane
-			unsigned char mediane = valeurs[cmpt_value / 2];
-			img_median.pixel[i][j] = mediane;
-		}
-	}
-
-	free(valeurs);
-	return img_median;
-}
-#pragma endregion
-
 #pragma region Fonction Image
-void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename)
+float Image_In(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURANT se, int nb_it)
 {
-	FILE* file = fopen(filename, "w");
-
-	if (file == NULL) {
-		printf("Erreur lors de l'ouverture du fichier %s\n", filename);
-		return;
-	}
-
-	for (int i = 0; i < size; i++) {
-		fprintf(file, "%f;%f\n", tab1[i], tab2[i]);
-	}
-
-	fclose(file);
-}
-float* Image_In(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURANT se, int nb_it)
-{
-	int compteur = 0;
-	float ajout_score = 0.0f;
+	float ajout_score = 0.0;
 	float* tableau_IOU = malloc(sizeof(float) * nb_it);
 	float* tableau_Moy = malloc(sizeof(float) * nb_it);
 
-	IMAGE imageTemp, imageTraitee;
+	IMAGE imageTraitee = allocationImage(200,200);
 	for (int i = 0; i < nb_it; i++)
 	{
 		// Charger l'image
@@ -2182,12 +2111,13 @@ float* Image_In(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURAN
 		IMAGE veriteTerrain = lectureImage(veriteTerrainPaths[i]);
 
 		// Traitement sur l'image
-		imageTemp = inverseImage(image);
-		imageTraitee = whiteTopHatavecSE(imageTemp, se, 30);
+		imageTraitee = inverseImage(image);
+		imageTraitee = whiteTopHatavecSE(imageTraitee, se, 30);
 		imageTraitee = seuillageOtsu(imageTraitee);
 		imageTraitee = erosionImageavecSE(imageTraitee, se);
 		imageTraitee = erosionImageavecSE(imageTraitee, se);
 		imageTraitee = dilatationImageavecSE(imageTraitee, se);
+		imageTraitee = recuperation_blobs_communs(veriteTerrain, imageTraitee);
 
 		// Calcul du score IOU
 		float IOU = IOU_score(imageTraitee, veriteTerrain);
@@ -2195,33 +2125,31 @@ float* Image_In(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURAN
 
 		// Accumulation des scores
 		ajout_score += IOU;
-		compteur++;
 
 		// Calcul de la moyenne et ajout au tableau
-		tableau_Moy[i] = ajout_score / compteur;
+		tableau_Moy[i] = ajout_score / (i+1);
 	}
 
 	// Sauvegarde du tableau dans un fichier CSV
-	sauvegardeCSV(tableau_IOU, tableau_Moy, nb_it, "resultat.csv");
+	sauvegardeCSV(tableau_IOU, tableau_Moy, nb_it, "res\\resultats.csv");
 
-	float* resultats = malloc(sizeof(float) * 2);
-	resultats[0] = tableau_IOU[nb_it - 1]; // Dernier IOU
-	resultats[1] = tableau_Moy[nb_it - 1]; // Moyenne finale
+	float moyenne_finale = tableau_Moy[nb_it - 1];
 
-	// N'oubliez pas de lib�rer la m�moire
+	// Libération de la mémoire
 	free(tableau_IOU);
 	free(tableau_Moy);
 
-	return resultats;
+	return moyenne_finale;
 }
-float* Image_Sc(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURANT se, int nb_it)
+
+float Image_Sc(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURANT se, int nb_it)
 {
 	int compteur = 0;
-	float ajout_score = 0.0f;
+	float ajout_score = 0.0;
 	float* tableau_IOU = malloc(sizeof(float) * nb_it);
 	float* tableau_Moy = malloc(sizeof(float) * nb_it);
 
-	IMAGE imageTemp, imageTraitee;
+	IMAGE imageTraitee;
 	for (int i = 0; i < nb_it; i++)
 	{
 		// Charger l'image
@@ -2232,8 +2160,8 @@ float* Image_Sc(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURAN
 		imageTraitee = whiteTopHatavecSE(image, se, 30);
 		imageTraitee = seuillageOtsu(imageTraitee);
 		imageTraitee = erosionImageavecSE(imageTraitee, se);
-		imageTraitee = erosionImageavecSE(imageTraitee, se);
 		imageTraitee = dilatationImageavecSE(imageTraitee, se);
+		//imageTraitee = recuperation_blobs_communs(veriteTerrain, imageTraitee);
 
 		// Calcul du score IOU
 		float IOU = IOU_score(imageTraitee, veriteTerrain);
@@ -2248,17 +2176,13 @@ float* Image_Sc(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURAN
 	}
 
 	// Sauvegarde du tableau dans un fichier CSV
-	sauvegardeCSV(tableau_IOU, tableau_Moy, nb_it, "resultat.csv");
+	sauvegardeCSV(tableau_IOU, tableau_Moy, nb_it, "resultats.csv");
 
-	float* resultats = malloc(sizeof(float) * 2);
-	resultats[0] = tableau_IOU[nb_it - 1]; // Dernier IOU
-	resultats[1] = tableau_Moy[nb_it - 1]; // Moyenne finale
-
-	// N'oubliez pas de lib�rer la m�moire
+	// Libération de la mémoire
 	free(tableau_IOU);
 	free(tableau_Moy);
 
-	return resultats;
+	return tableau_Moy[nb_it - 1];
 }
 #pragma endregion
 
@@ -2295,87 +2219,31 @@ IMAGE recuperation_blobs_communs(IMAGE image_verite, IMAGE image_traitee)
 		}
 	}
 
-	for (int k = 0; k < 256; k++)
-	{
-		printf("%d ", LUT[k]);
-	}
-
 	// J'applique ma LUT pour ne garder que les blobs appartenant � mon image v�rit�e. 
 	IMAGE traitee_finale = ImageAvecLUT(labelise_image_traitee, LUT);
 	return traitee_finale;
 }
 #pragma endregion
-#pragma region Revision Eval 3
-IMAGE bruitAleatoireImage(IMAGE image, int amplitude) {
-	IMAGE bruit = image;
-	int valMin = (-1) * amplitude;
 
-	for (int i = 0; i < (image.Nbcol * image.Nblig); i++) {
-		int temp = bruit.data[i] + (valMin + rand() % (amplitude + 1 - valMin));
-		if (temp < 0) temp = 0;
-		if (temp > 255) temp = 255;
-		bruit.data[i] = temp;
+#pragma region CSV export 
+void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename)
+{
+	FILE* file = fopen(filename, "w");
+
+	if (file == NULL) {
+		printf("Erreur lors de l'ouverture du fichier %s\n", filename);
+		return;
 	}
-	return image;
+
+	// Écrire les en-têtes de colonne
+	fprintf(file, "L'IoU;Sommes moyennes\n");
+
+	for (int i = 0; i < size; i++) {
+		fprintf(file, "%f;%f\n", tab1[i], tab2[i]);
+	}
+
+	fclose(file);
 }
-
-IMAGERGB masqueImage(IMAGE image, IMAGERGB masque) {
-	IMAGERGB rgb = allocationImageRGB(image.Nblig, image.Nbcol);
-	for (int i = 0; i < (masque.Nbcol * masque.Nblig); i++) {
-		if (masque.data[i].B == 0 && masque.data[i].G == 0 && masque.data[i].R == 0) {
-			rgb.data[i].B = image.data[i];
-			rgb.data[i].G = image.data[i];
-			rgb.data[i].R = image.data[i];
-		}
-		else {
-			rgb.data[i] = masque.data[i];
-		}
-	}
-	return rgb;
-}
-#pragma endregion
-
-#pragma region Eval2 
-POINT* imageVersPoints(IMAGE image, int* n, char axe) {
-	int indice = 0;
-
-	POINT* tab = (POINT*)calloc((image.Nbcol * image.Nblig), sizeof(POINT));
-	if (axe == "x") {// Fixe le x � i et le y � j
-		for (int j = 0; j < image.Nbcol; j++) {
-			for (int i = 0; i < image.Nblig; i++) {
-				if (image.pixel[i][j] != 0) {
-					POINT temp = { i , j };
-					tab[indice] = temp;
-					indice++;
-				}
-			}
-		}
-	}
-	else { // Fixe le x � j et le y � i 
-		for (int j = 0; j < image.Nbcol; j++) {
-			for (int i = 0; i < image.Nblig; i++) {
-				if (image.pixel[i][j] != 0) {
-					POINT temp = { j , i };
-					tab[indice] = temp;
-					indice++;
-				}
-			}
-		}
-	}
-
-	*n = indice;
-	tab = (POINT*)realloc(&tab, *n * sizeof(POINT)); //Ne fonctionne pas
-
-
-	if (axe == "x") {
-		sortieRegression("AxeX.csv", tab, indice);
-	}
-	else {
-		sortieRegression("AxeY.csv", tab, indice);
-	}
-	return tab;
-}
-
 #pragma endregion
 
 #pragma region CSV export 
@@ -2386,15 +2254,3 @@ void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename) {
 		printf("Erreur lors de l'ouverture du fichier %s\n", filename);
 		return;
 	}
-
-	for (int i = 0; i < size; i++) {
-		fprintf(file, "%f;%f\n", tab1[i], tab2[i]);
-	}
-
-	fclose(file);
-}
-#pragma endregion
-
-
-
-

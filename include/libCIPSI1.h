@@ -5,7 +5,7 @@
 typedef struct image {
 	int   Nblig;
 	int   Nbcol;
-	unsigned char*  data;
+	unsigned char* data;
 	unsigned char** pixel;
 } IMAGE;
 
@@ -18,7 +18,7 @@ typedef struct rgb {
 typedef struct imageRGB {
 	int   Nblig;
 	int   Nbcol;
-	RGB*  data;
+	RGB* data;
 	RGB** pixel;
 } IMAGERGB;
 
@@ -78,17 +78,17 @@ void RecherchePointsExtremes(POINT tab[], int n, POINT* ptDistMin, POINT* ptDist
 IMAGE allocationImage(int Nblig, int Nbcol);
 void initialisationAleatoireImage(IMAGE img, int ngMin, int ngMax);
 
-void sauvegardeImage(IMAGE img, const char *type, const char *out);
-void liberationImage(IMAGE *im);
+void sauvegardeImage(IMAGE img, const char* type, const char* out);
+void liberationImage(IMAGE* im);
 
-IMAGE lectureImage(const char *nom);
+IMAGE lectureImage(const char* nom);
 
 IMAGERGB allocationImageRGB(int Nblig, int Nbcol);
 void initialisationAleatoireImageRGB(IMAGERGB img, int ngMin, int ngMax);
-IMAGERGB lectureImageRGB(const char *nom);
+IMAGERGB lectureImageRGB(const char* nom);
 
-void sauvegardeImageRGB(IMAGERGB img, const char *type, const char *out);
-void liberationImageRGB(IMAGERGB *im);
+void sauvegardeImageRGB(IMAGERGB img, const char* type, const char* out);
+void liberationImageRGB(IMAGERGB* im);
 
 IMAGE planImage(IMAGERGB img, int plan);
 IMAGE luminanceImage(IMAGERGB img, float r, float g, float b);
@@ -104,7 +104,7 @@ SIGNATURES statistiquesImage(IMAGE img);
 
 IMAGE seuillageOtsu(IMAGE img);
 
-IMAGE labelImage(IMAGE img, int *nbComp); /* image label + nb composantes connexes */
+IMAGE labelImage(IMAGE img, int* nbComp); /* image label + nb composantes connexes */
 IMAGERGB colorisationImage(IMAGE img, char* table);
 
 double distanceHistogrammeImage(int* h1, int* h2, int taille);
@@ -112,15 +112,6 @@ SIGNATURE_COMPOSANTE_CONNEXE* signaturesImage(IMAGE img, int nbComp);
 void affiche_signatures(SIGNATURE_COMPOSANTE_CONNEXE* signatures, int nbCompo);
 int* LUTsansBord(SIGNATURE_COMPOSANTE_CONNEXE* signatures, int nbComp);
 IMAGE ImageAvecLUT(const IMAGE img, int* LUT);
-
-
-
-
-
-
-
-
-
 
 #pragma region Revision Eval 3
 IMAGE bruitAleatoireImage(IMAGE img, int amplitude);
@@ -137,24 +128,6 @@ void sortieRegression(const char* nom, POINT* pts, int n);
 POINT* ImageVersPoints(IMAGE img, int* n, char axe);
 IMAGE imageSortieRegression(IMAGE img, char axe);
 POINT* GenerationAleatoirePointsDyn(int n, float min, float max);
-#pragma endregion
-
-#pragma region CSV export
-void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename);
-#pragma endregion
-
-#pragma region IOU
-float IOU_score(IMAGE traitee, IMAGE veritee);
-#pragma endregion
-
-#pragma region Filtre
-/// <summary>
-/// Fonction permettant de n'afficher que les blobs appartennant � l'image v�rit�e
-/// </summary>
-/// <param name="image_verite">Image v�rit�e</param>
-/// <param name="image_traitee">Image trait�e</param>
-/// <returns></returns>
-IMAGE recuperation_blobs_communs(IMAGE image_verite, IMAGE image_traitee);
 #pragma endregion
 
 #pragma region morphologie
@@ -223,10 +196,8 @@ IMAGE blackTopHatavecSE(IMAGE img, ELEMENT_STRUCTURANT SE, int n_iteration);
 
 #pragma region Element structurant
 ELEMENT_STRUCTURANT allocation_ElementStructurant(const char* type, int hauteur, int largeur);
-ELEMENT_STRUCTURANT allocation_ElementStructurant_disk(const char* type, int rayon);
 ELEMENT_STRUCTURANT allocation_ElementStructurant_rect(const char* type, int hauteur, int largeur);
 ELEMENT_STRUCTURANT allocation_ElementStructurant_ellipse(const char* type, int hauteur, int largeur);
-void remplissageV4(unsigned char** pixel, int x, int y, int colcible, int colrep);
 #pragma endregion
 
 #pragma region IOU
@@ -234,31 +205,29 @@ float IOU_score(IMAGE traitee, IMAGE veritee);
 #pragma endregion
 
 #pragma region Filtres
-
-IMAGE filtrageMedian(IMAGE img, int N);
-
+IMAGE recuperation_blobs_communs(IMAGE image_verite, IMAGE image_traitee);
 #pragma endregion
 
 #pragma region Fonction Image
 void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename);
-float* Image_In(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURANT se, int nb_it);
-float* Image_Sc(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURANT se, int nb_it);
+float Image_In(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURANT se, int nb_it);
+float Image_Sc(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURANT se, int nb_it);
 #pragma endregion
 
-#pragma region Revision Eval 3
-IMAGE bruitAleatoireImage(IMAGE img, int amplitude);
-IMAGERGB masqueImage(IMAGE img, IMAGERGB masque);
+#pragma region CSV export
+void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename);
 #pragma endregion
 
-#pragma region Eval2 
-POINT* imageVersPoints(IMAGE img, int* n, char axe);
+#pragma region IOU
+float IOU_score(IMAGE traitee, IMAGE veritee);
 #pragma endregion
 
-#pragma region Regression 
-void regression(POINT* tab, int n, float* a, float* b);
-void sortieRegression(const char* nom, POINT* pts, int n);
-POINT* ImageVersPoints(IMAGE img, int* n, char axe);
-IMAGE imageSortieRegression(IMAGE img, char axe);
-POINT* GenerationAleatoirePointsDyn(int n, float min, float max);
+#pragma region Filtre
+/// <summary>
+/// Fonction permettant de n'afficher que les blobs appartennant � l'image v�rit�e
+/// </summary>
+/// <param name="image_verite">Image v�rit�e</param>
+/// <param name="image_traitee">Image trait�e</param>
+/// <returns></returns>
+IMAGE recuperation_blobs_communs(IMAGE image_verite, IMAGE image_traitee);
 #pragma endregion
-
