@@ -17,7 +17,7 @@ int main()
     char** imagePaths;
     char** veriteTerrainPaths;
     float* results = NULL;
-    int useDefaultSE = 1; // Use default structuring element flag
+    int useDefaultSE = 1;
 
     while (1)
     {

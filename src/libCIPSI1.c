@@ -2310,6 +2310,9 @@ void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename)
 		return;
 	}
 
+	// Écrire les en-têtes de colonne
+	fprintf(file, "L'IoU;Somme des moyenne\n");
+
 	for (int i = 0; i < size; i++) {
 		fprintf(file, "%f;%f\n", tab1[i], tab2[i]);
 	}
