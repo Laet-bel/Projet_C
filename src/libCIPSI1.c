@@ -2158,6 +2158,149 @@ IMAGE filtrageMedian(IMAGE img, int N)
 #pragma endregion
 
 #pragma region Fonction Image
+
+IMAGE lectureImagesansprintf(const char* in)
+{
+	FILE* F = NULL;
+	IMAGE image = { 0,0,NULL };
+	int dynamique = 0;
+
+	if ((F = fopen(in, "r")) == NULL)
+	{
+		printf("Pb image inexistante");
+	}
+	else
+	{
+		char type[3];
+
+		fgets(type, 3, F);
+		fclose(F);
+		/* selon le type ouverture binaire ou texte */
+		if (strcmp(type, "P2") == 0)  /* cas ASCII niveaux de gris */
+		{
+			char buf;
+
+			F = fopen(in, "r");
+
+			/* lecture caractère après caractère compte-tenu de la diversité des entêtes possibles */
+			fscanf(F, "%c", &type[0]);
+			fscanf(F, "%c", &type[1]);
+			fscanf(F, "%c", &buf); /* caractère espacement */
+
+			fscanf(F, "%c", &buf);
+			if (buf == '#') {
+				/* on ignore tout jusqu'à trouver '\n' */
+				while (buf != '\n')
+					fscanf(F, "%c", &buf);
+				fscanf(F, "%c", &buf);
+			}
+			while (((buf - '0') >= 0) && ((buf - '0') <= 9)) { /* possibilité d'utiliser également isdigit de la librairie standard <ctype.h> */
+				image.Nbcol = image.Nbcol * 10 + (buf - '0');
+				fscanf(F, "%c", &buf);
+			}
+
+			fscanf(F, "%c", &buf);
+			if (buf == '#') {
+				/* on ignore tout jusqu'à trouver '\n' */
+				while (buf != '\n')
+					fscanf(F, "%c", &buf);
+				fscanf(F, "%c", &buf);
+			}
+			while (((buf - '0') >= 0) && ((buf - '0') <= 9)) {
+				image.Nblig = image.Nblig * 10 + (buf - '0');
+				fscanf(F, "%c", &buf);
+			}
+
+			fscanf(F, "%c", &buf);
+			if (buf == '#') {
+				/* on ignore tout jusqu'à trouver '\n' */
+				while (buf != '\n')
+					fscanf(F, "%c", &buf);
+				fscanf(F, "%c", &buf);
+			}
+			while (((buf - '0') >= 0) && ((buf - '0') <= 9)) {
+				dynamique = dynamique * 10 + (buf - '0');
+				fscanf(F, "%c", &buf);
+			}
+
+			/* taille connue, allocation dynamique possible */
+			image = allocationImage(image.Nblig, image.Nbcol);
+
+			/* lecture pixel par pixel */
+			{
+				int i, j;
+				int tmp;
+
+				for (i = 0; i < image.Nblig; i++)
+					for (j = 0; j < image.Nbcol; j++)
+					{
+						fscanf(F, "%d", &tmp);
+						image.pixel[i][j] = (unsigned char)tmp;
+					}
+			}
+		}
+		else
+			if (strcmp(type, "P5") == 0)  /* cas brut niveaux de gris */
+			{
+				char buf;
+
+				F = fopen(in, "rb");
+
+				/* lecture caractère après caractère compte-tenu de la diversité des entêtes possibles */
+				type[0] = fgetc(F);
+				type[1] = fgetc(F);
+				buf = fgetc(F); /* caractère espacement */
+
+				buf = fgetc(F);
+				if (buf == '#') {
+					/* on ignore tout jusqu'à trouver '\n' */
+					while (buf != '\n')
+						buf = fgetc(F);
+					buf = fgetc(F);
+				}
+				while (((buf - '0') >= 0) && ((buf - '0') <= 9)) { /* possibilité d'utiliser également isdigit de la librairie standard <ctype.h> */
+					image.Nbcol = image.Nbcol * 10 + (buf - '0');
+					buf = fgetc(F);
+				}
+
+				buf = fgetc(F);
+				if (buf == '#') {
+					/* on ignore tout jusqu'à trouver '\n' */
+					while (buf != '\n')
+						buf = fgetc(F);
+					buf = fgetc(F);
+				}
+				while (((buf - '0') >= 0) && ((buf - '0') <= 9)) {
+					image.Nblig = image.Nblig * 10 + (buf - '0');
+					buf = fgetc(F);
+				}
+
+				buf = fgetc(F);
+				if (buf == '#') {
+					/* on ignore tout jusqu'à trouver '\n' */
+					while (buf != '\n')
+						buf = fgetc(F);
+					buf = fgetc(F);
+				}
+				while (((buf - '0') >= 0) && ((buf - '0') <= 9)) {
+					dynamique = dynamique * 10 + (buf - '0');
+					buf = fgetc(F);
+				}
+
+				/* taille connue, allocation dynamique possible */
+				image = allocationImage(image.Nblig, image.Nbcol);
+
+				/* lecture d'un bloc */
+				fread(image.data, sizeof(unsigned char), image.Nbcol * image.Nblig, F);
+			}
+			else
+				printf("Format non supporte pour l'instant...\n");
+		fclose(F);
+	}
+	return image;
+}
+//peut-être
+
 void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename)
 {
 	FILE* file = fopen(filename, "w");
@@ -2166,6 +2309,9 @@ void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename)
 		printf("Erreur lors de l'ouverture du fichier %s\n", filename);
 		return;
 	}
+
+	// Écrire les en-têtes de colonne
+	fprintf(file, "L'IoU;Somme des moyenne\n");
 
 	for (int i = 0; i < size; i++) {
 		fprintf(file, "%f;%f\n", tab1[i], tab2[i]);
@@ -2184,8 +2330,8 @@ float* Image_In(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURAN
 	for (int i = 0; i < nb_it; i++)
 	{
 		// Charger l'image
-		IMAGE image = lectureImage(imagePaths[i]);
-		IMAGE veriteTerrain = lectureImage(veriteTerrainPaths[i]);
+		IMAGE image = lectureImagesansprintf(imagePaths[i]);
+		IMAGE veriteTerrain = lectureImagesansprintf(veriteTerrainPaths[i]);
 
 		// Traitement sur l'image
 		imageTemp = inverseImage(image);
@@ -2231,8 +2377,8 @@ float* Image_Sc(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURAN
 	for (int i = 0; i < nb_it; i++)
 	{
 		// Charger l'image
-		IMAGE image = lectureImage(imagePaths[i]);
-		IMAGE veriteTerrain = lectureImage(veriteTerrainPaths[i]);
+		IMAGE image = lectureImagesansprintf(imagePaths[i]);
+		IMAGE veriteTerrain = lectureImagesansprintf(veriteTerrainPaths[i]);
 
 		// Traitement sur l'image
 		imageTraitee = whiteTopHatavecSE(image, se, 30);

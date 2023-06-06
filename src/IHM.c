@@ -1,19 +1,7 @@
-#include <stdio.h>
+ï»¿#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <libCIPSI1.h>
-
-//
-//// Mettre variable globale avec nom d'élément structurant :nom =  "V4" hauteur = 3 largeur 3 
-//
-//// Ajouter si appui sur p ==> choix parametres 
-//// Ajouter si appui sur a ==> Afficher Element structure (Pas tout de suite / si on a le temps)
-//
-//// Dans parametre demander choix element structurant 
-//// Choix hauteur / largeur ??? 
-//
-//
-//// Générer image pour envoyer à la fonction + SE
 
 int main()
 {
@@ -29,6 +17,7 @@ int main()
     char** imagePaths;
     char** veriteTerrainPaths;
     float* results = NULL;
+    int useDefaultSE = 1;
 
     while (1)
     {
@@ -49,7 +38,6 @@ int main()
             strcpy(type, "Sc");
             break;
         }
-
         else if (strcmp(type, "Q") == 0 || strcmp(type, "q") == 0)
         {
             printf("Programme quitte.\n");
@@ -61,7 +49,8 @@ int main()
         }
     }
 
-    while (1) {
+    while (1)
+    {
         printf("\nChoix de la selection :\n");
         printf("1 pour une seule image\n");
         printf("2 pour toutes les images\n");
@@ -85,6 +74,44 @@ int main()
                 strcat(path, start);
                 strcat(path, ".pgm");
                 printf("\nVous avez choisi l'image : %s\n", path);
+
+                imagePaths = malloc(sizeof(char*) * 200);
+                veriteTerrainPaths = malloc(sizeof(char*) * 200);
+
+                if (strcmp(type, "In") == 0)
+                {
+                    imagePaths[0] = malloc(sizeof(char) * 200);
+                    veriteTerrainPaths[0] = malloc(sizeof(char) * 200);
+
+                    sprintf(imagePaths[0], "%s%s_%d.pgm", path, type, atoi(start));
+                    sprintf(veriteTerrainPaths[0], "%s%s_%d.pgm", pathVT, type, atoi(start));
+
+                    if (useDefaultSE) {
+                        strcpy(element, "V4");
+                        se = allocation_ElementStructurant('V4', 3, 3);
+                    }
+
+                    results = Image_In(imagePaths, veriteTerrainPaths, se, 1);
+                }
+                else if (strcmp(type, "Sc") == 0)
+                {
+                    imagePaths[0] = malloc(sizeof(char) * 200);
+                    veriteTerrainPaths[0] = malloc(sizeof(char) * 200);
+
+                    sprintf(imagePaths[0], "%s%s_%d.pgm", path, type, atoi(start));
+                    sprintf(veriteTerrainPaths[0], "%s%s_%d.pgm", pathVT, type, atoi(start));
+
+                    if (useDefaultSE) {
+                        strcpy(element, "V4");
+                        se = allocation_ElementStructurant('V4', 3, 3);
+                    }
+
+                    results = Image_Sc(imagePaths, veriteTerrainPaths, se, 1);
+                }
+
+                printf("Resultats :\n");
+                printf("Score IOU : %f\n", results[0]);
+                free(results);
                 break;
             }
         }
@@ -93,29 +120,42 @@ int main()
             imagePaths = malloc(sizeof(char*) * 300);
             veriteTerrainPaths = malloc(sizeof(char*) * 300);
 
-            if (strcmp(type, "In") == 0) 
+            if (strcmp(type, "In") == 0)
             {
-                for (int i = 0; i < 300; i++) {
-                    imagePaths[i] = malloc(sizeof(char) * 100);
-                    veriteTerrainPaths[i] = malloc(sizeof(char) * 100);
-
-                    sprintf(imagePaths[i], "%s%s_%d.pgm", path, type, i + 1);
-                    sprintf(veriteTerrainPaths[i], "%s%s_%d.pgm", pathVT, type, i + 1);
-                }
-                results = Image_In(imagePaths, veriteTerrainPaths, se, 300);
-            }
-            else if (strcmp(type, "Sc") == 0) 
-            {
-                for (int i = 0; i < 300; i++) 
+                for (int i = 0; i < 300; i++)
                 {
                     imagePaths[i] = malloc(sizeof(char) * 100);
                     veriteTerrainPaths[i] = malloc(sizeof(char) * 100);
                     sprintf(imagePaths[i], "%s%s_%d.pgm", path, type, i + 1);
                     sprintf(veriteTerrainPaths[i], "%s%s_%d.pgm", pathVT, type, i + 1);
                 }
+
+                if (useDefaultSE) {
+                    strcpy(element, "V4");
+                    se = allocation_ElementStructurant('V4', 3, 3);
+                }
+
+                results = Image_In(imagePaths, veriteTerrainPaths, se, 300);
+            }
+            else if (strcmp(type, "Sc") == 0)
+            {
+                for (int i = 0; i < 300; i++)
+                {
+                    imagePaths[i] = malloc(sizeof(char) * 100);
+                    veriteTerrainPaths[i] = malloc(sizeof(char) * 100);
+                    sprintf(imagePaths[i], "%s%s_%d.pgm", path, type, i + 1);
+                    sprintf(veriteTerrainPaths[i], "%s%s_%d.pgm", pathVT, type, i + 1);
+                }
+
+                if (useDefaultSE) {
+                    strcpy(element, "V4");
+                    se = allocation_ElementStructurant('V4', 3, 3);
+                }
+
                 results = Image_Sc(imagePaths, veriteTerrainPaths, se, 300);
             }
-            printf("Résultats :\n");
+
+            printf("RÃ©sultats :\n");
             printf("Score IOU : %f\n", results[0]);
             printf("Moyenne : %f\n", results[1]);
             free(results);
@@ -133,80 +173,101 @@ int main()
             }
             else
             {
-                strcat(path, type);
-                strcat(path, "_");
-                strcat(path, start);
-                strcat(path, ".pgm");
-                printf("\nVous avez choisi les images suivantes : \n");
-                printf("%s\n", path);
-                for (int i = atoi(start) + 1; i <= atoi(end); i++)
+                float* results = NULL;
+                int nbImages = atoi(end) - atoi(start) + 1;
+
+                imagePaths = malloc(sizeof(char*) * nbImages);
+                veriteTerrainPaths = malloc(sizeof(char*) * nbImages);
+
+                if (strcmp(type, "In") == 0)
                 {
-                    char str[5];
-                    sprintf(str, "%d", i);
-                    char temp[100];
-                    strcpy(temp, path);
-                    temp[strlen(temp) - strlen(start) - 4] = '\0';
-                    strcat(temp, str);
-                    strcat(temp, ".pgm");
-                    printf("%s\n", temp);
+                    for (int i = atoi(start); i <= atoi(end); i++)
+                    {
+                        imagePaths[i - atoi(start)] = malloc(sizeof(char) * 100);
+                        veriteTerrainPaths[i - atoi(start)] = malloc(sizeof(char) * 100);
+                        sprintf(imagePaths[i - atoi(start)], "%s%s_%d.pgm", path, type, i);
+                        sprintf(veriteTerrainPaths[i - atoi(start)], "%s%s_%d.pgm", pathVT, type, i);
+                    }
+
+                    if (useDefaultSE) {
+                        strcpy(element, "V4");
+                        se = allocation_ElementStructurant('V4', 3, 3);
+                    }
+
+                    results = Image_In(imagePaths, veriteTerrainPaths, se, nbImages);
                 }
+                else if (strcmp(type, "Sc") == 0)
+                {
+                    for (int i = atoi(start); i <= atoi(end); i++)
+                    {
+                        imagePaths[i - atoi(start)] = malloc(sizeof(char) * 100);
+                        veriteTerrainPaths[i - atoi(start)] = malloc(sizeof(char) * 100);
+                        sprintf(imagePaths[i - atoi(start)], "%s%s_%d.pgm", path, type, i);
+                        sprintf(veriteTerrainPaths[i - atoi(start)], "%s%s_%d.pgm", pathVT, type, i);
+                    }
+
+                    if (useDefaultSE) {
+                        strcpy(element, "V4");
+                        se = allocation_ElementStructurant('V4', 3, 3);
+                    }
+
+                    results = Image_Sc(imagePaths, veriteTerrainPaths, se, nbImages);
+                }
+
+                printf("Resultats :\n");
+                printf("Moyenne : %f\n", results[1]);
+                free(results);
                 break;
             }
         }
         else if (strcmp(input, "p") == 0 || strcmp(input, "P") == 0)
         {
+            useDefaultSE = 0;
             while (1)
             {
                 int rayon = 3;
                 int hauteur = 3;
                 int largeur = 3;
                 printf("\nChoix de l'element structurant :\n");
-                printf("1 pour disk\n");
-                printf("2 pour rectangle\n");
-                printf("3 pour ligne verticale\n");
-                printf("4 pour ligne horizontale\n");
-                printf("5 pour ellipse\n");
-                printf("6 pour V4\n");
-                printf("7 pour V8\n");
+                printf("1 pour rectangle\n");
+                printf("2 pour ligne verticale\n");
+                printf("3 pour ligne horizontale\n");
+                printf("4 pour ellipse\n");
+                printf("5 pour V4\n");
+                printf("6 pour V8\n");
                 scanf("%s", element);
 
                 if (strcmp(element, "1") == 0)
-                {
-                    strcpy(element, "disk");
-                    se = allocation_ElementStructurant('disk', hauteur, largeur);
-                    break;
-                }
-                else if (strcmp(element, "2") == 0)
                 {
                     strcpy(element, "rectangle");
                     se = allocation_ElementStructurant('rect', hauteur, largeur);
                     break;
                 }
-                else if (strcmp(element, "3") == 0)
+                else if (strcmp(element, "2") == 0)
                 {
                     strcpy(element, "ligne verticale");
                     se = allocation_ElementStructurant('ligV', hauteur, largeur);
                     break;
                 }
-                else if (strcmp(element, "4") == 0)
+                else if (strcmp(element, "3") == 0)
                 {
                     strcpy(element, "ligne horizontale");
                     se = allocation_ElementStructurant('ligH', hauteur, largeur);
                     break;
                 }
-                else if (strcmp(element, "5") == 0)
+                else if (strcmp(element, "4") == 0)
                 {
                     strcpy(element, "ellipse");
                     se = allocation_ElementStructurant('elli', hauteur, largeur);
                     break;
                 }
-                else if (strcmp(element, "6") == 0)
+                else if (strcmp(element, "5") == 0)
                 {
                     strcpy(element, "V4");
                     se = allocation_ElementStructurant('V4', hauteur, largeur);
                     break;
                 }
-                else if (strcmp(element, "7") == 0)
+                else if (strcmp(element, "6") == 0)
                 {
                     strcpy(element, "V8");
                     se = allocation_ElementStructurant('V8', hauteur, largeur);
