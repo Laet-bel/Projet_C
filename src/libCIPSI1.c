@@ -258,10 +258,13 @@ IMAGE lectureImage(const char* in)
 				fscanf(F, "%c", &buf);
 			}
 
+#ifndef NDEBUG
 			/* d�but des data */
-
 			printf("Lecture image NG type %s avec %d lignes et %d colonnes...\n", type, image.Nblig, image.Nbcol);
 
+#endif // DEBUG
+
+			
 			/* taille connue, allocation dynamique possible */
 			image = allocationImage(image.Nblig, image.Nbcol);
 
@@ -325,11 +328,11 @@ IMAGE lectureImage(const char* in)
 					dynamique = dynamique * 10 + (buf - '0');
 					buf = fgetc(F);
 				}
-
+#ifndef NDEBUG
 				/* d�but des data */
 
 				printf("Lecture image NG type %s avec %d lignes et %d colonnes...\n", type, image.Nblig, image.Nbcol);
-
+#endif
 				/* taille connue, allocation dynamique possible */
 				image = allocationImage(image.Nblig, image.Nbcol);
 
@@ -2096,12 +2099,11 @@ float IOU_score(IMAGE traitee, IMAGE veritee) {
 #pragma region Fonction Image
 float Image_In(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURANT se, int nb_it)
 {
-	int compteur = 0;
 	float ajout_score = 0.0;
 	float* tableau_IOU = malloc(sizeof(float) * nb_it);
 	float* tableau_Moy = malloc(sizeof(float) * nb_it);
 
-	IMAGE imageTemp, imageTraitee;
+	IMAGE imageTraitee = allocationImage(200,200);
 	for (int i = 0; i < nb_it; i++)
 	{
 		// Charger l'image
@@ -2123,10 +2125,9 @@ float Image_In(char** imagePaths, char** veriteTerrainPaths, ELEMENT_STRUCTURANT
 
 		// Accumulation des scores
 		ajout_score += IOU;
-		compteur++;
 
 		// Calcul de la moyenne et ajout au tableau
-		tableau_Moy[i] = ajout_score / compteur;
+		tableau_Moy[i] = ajout_score / (i+1);
 	}
 
 	// Sauvegarde du tableau dans un fichier CSV
@@ -2225,13 +2226,17 @@ IMAGE recuperation_blobs_communs(IMAGE image_verite, IMAGE image_traitee)
 #pragma endregion
 
 #pragma region CSV export 
-void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename) {
+void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename)
+{
 	FILE* file = fopen(filename, "w");
 
 	if (file == NULL) {
 		printf("Erreur lors de l'ouverture du fichier %s\n", filename);
 		return;
 	}
+
+	// Écrire les en-têtes de colonne
+	fprintf(file, "L'IoU;Sommes moyennes\n");
 
 	for (int i = 0; i < size; i++) {
 		fprintf(file, "%f;%f\n", tab1[i], tab2[i]);
