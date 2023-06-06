@@ -75,16 +75,16 @@ int main()
                 strcat(path, ".pgm");
                 printf("\nVous avez choisi l'image : %s\n", path);
 
-                imagePaths = malloc(sizeof(char*) * 200);
-                veriteTerrainPaths = malloc(sizeof(char*) * 200);
+                imagePaths = malloc(sizeof(char*));
+                veriteTerrainPaths = malloc(sizeof(char*));
 
                 if (strcmp(type, "In") == 0)
                 {
-                    imagePaths[0] = malloc(sizeof(char) * 200);
-                    veriteTerrainPaths[0] = malloc(sizeof(char) * 200);
+                    imagePaths[0] = malloc(sizeof(char) * 100);
+                    veriteTerrainPaths[0] = malloc(sizeof(char) * 100);
 
-                    sprintf(imagePaths[0], "%s%s_%d.pgm", path, type, atoi(start));
-                    sprintf(veriteTerrainPaths[0], "%s%s_%d.pgm", pathVT, type, atoi(start));
+                    sprintf(imagePaths[0], "%s_%d", path, atoi(start));
+                    sprintf(veriteTerrainPaths[0], "%s_%d", pathVT, atoi(start));
 
                     if (useDefaultSE) {
                         strcpy(element, "V4");
@@ -95,11 +95,11 @@ int main()
                 }
                 else if (strcmp(type, "Sc") == 0)
                 {
-                    imagePaths[0] = malloc(sizeof(char) * 200);
-                    veriteTerrainPaths[0] = malloc(sizeof(char) * 200);
+                    imagePaths[0] = malloc(sizeof(char) * 100);
+                    veriteTerrainPaths[0] = malloc(sizeof(char) * 100);
 
-                    sprintf(imagePaths[0], "%s%s_%d.pgm", path, type, atoi(start));
-                    sprintf(veriteTerrainPaths[0], "%s%s_%d.pgm", pathVT, type, atoi(start));
+                    sprintf(imagePaths[0], "%s_%d", path, atoi(start));
+                    sprintf(veriteTerrainPaths[0], "%s_%d", pathVT, atoi(start));
 
                     if (useDefaultSE) {
                         strcpy(element, "V4");
@@ -111,6 +111,8 @@ int main()
 
                 printf("Resultats :\n");
                 printf("Score IOU : %f\n", results[0]);
+                free(imagePaths);
+                free(veriteTerrainPaths);
                 free(results);
                 break;
             }
