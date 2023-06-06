@@ -2246,11 +2246,3 @@ void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename)
 }
 #pragma endregion
 
-#pragma region CSV export 
-void sauvegardeCSV(float* tab1, float* tab2, int size, const char* filename) {
-	FILE* file = fopen(filename, "w");
-
-	if (file == NULL) {
-		printf("Erreur lors de l'ouverture du fichier %s\n", filename);
-		return;
-	}
