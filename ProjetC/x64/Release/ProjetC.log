@@ -1,0 +1,32 @@
+﻿  IHM.c
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(91,64): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(91,60): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(106,64): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(106,60): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(132,60): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(132,56): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(149,60): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(149,56): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(186,64): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(186,60): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(203,64): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(203,60): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(230,62): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(230,56): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(236,62): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(236,56): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(242,62): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(242,56): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(248,62): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(248,56): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(254,60): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(254,56): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(260,60): warning C4047: 'fonction' : les niveaux d'indirection de 'const char *' et de 'int' sont différents
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(260,56): warning C4024: 'allocation_ElementStructurant' : types différents pour le paramètre formel et réel 1
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\IHM.c(11,9): warning C4101: 'choice' : variable locale non référencée
+  Génération de code en cours
+  Previous IOBJ not found, fall back to full compilation.
+C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\src\libCIPSI1.c(1983): warning C4715: 'allocation_ElementStructurant' : les chemins de contrôle ne retournent pas tous une valeur
+  All 35 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Fin de la génération du code
+  ProjetC.vcxproj -> C:\Users\laetb\OneDrive\Bureau\cour\IPSI1\Projet_C\ProjetC\x64\Release\ProjetC.exe

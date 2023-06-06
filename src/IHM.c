@@ -1,7 +1,7 @@
 ﻿#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <libCIPSI1.h>
+#include "libCIPSI1.h"
 
 int main()
 {
@@ -12,11 +12,11 @@ int main()
     char start[5];
     char end[5];
     char input[10];
-    char element[10];
+    char element[20];
     ELEMENT_STRUCTURANT se;
     char** imagePaths;
     char** veriteTerrainPaths;
-    float* results = NULL;
+    float results = 0.0;
     int useDefaultSE = 1;
 
     while (1)
@@ -108,10 +108,7 @@ int main()
 
                     results = Image_Sc(imagePaths, veriteTerrainPaths, se, 1);
                 }
-
-                printf("Resultats :\n");
-                printf("Score IOU : %f\n", results[0]);
-                free(results);
+                printf("IOU: %f\n", results);
                 break;
             }
         }
@@ -154,11 +151,7 @@ int main()
 
                 results = Image_Sc(imagePaths, veriteTerrainPaths, se, 300);
             }
-
-            printf("Résultats :\n");
-            printf("Score IOU : %f\n", results[0]);
-            printf("Moyenne : %f\n", results[1]);
-            free(results);
+            printf("IOU: %f\n", results);
             break;
         }
         else if (strcmp(input, "3") == 0)
@@ -173,7 +166,6 @@ int main()
             }
             else
             {
-                float* results = NULL;
                 int nbImages = atoi(end) - atoi(start) + 1;
 
                 imagePaths = malloc(sizeof(char*) * nbImages);
@@ -210,14 +202,9 @@ int main()
                         strcpy(element, "V4");
                         se = allocation_ElementStructurant('V4', 3, 3);
                     }
-
                     results = Image_Sc(imagePaths, veriteTerrainPaths, se, nbImages);
                 }
-
-                printf("Resultats :\n");
-                printf("Moyenne : %f\n", results[1]);
-                free(results);
-                break;
+                printf("IOU: %f\n", results);
             }
         }
         else if (strcmp(input, "p") == 0 || strcmp(input, "P") == 0)
