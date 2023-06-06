@@ -12,8 +12,8 @@ int main()
     char start[5];
     char end[5];
     char input[10];
-    char element[20];
-    ELEMENT_STRUCTURANT se;
+    char element[20] = "V4";
+    ELEMENT_STRUCTURANT se = allocation_ElementStructurant('V4', 3, 3);
     char** imagePaths;
     char** veriteTerrainPaths;
     float results = 0.0;
